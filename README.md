@@ -38,11 +38,11 @@ results/                      Seed-level raw and summary experimental CSVs
 - `models/model.safetensors`: local ConvNeXt checkpoint.
 - `models/dinov2_vit_base_patch14_lvd142m.safetensors`: DINOv2 checkpoint.
 
-These files should be provided separately, for example by GitHub Releases, cloud drive, institutional repository, or local copy. Their required paths and checksums are listed in `MANUAL_ASSETS.md` and `WEIGHTS_AND_CHECKPOINTS.md`.
+These files are provided in the Baidu Netdisk full asset package listed below. Their required local paths and checksums are documented in `MANUAL_ASSETS.md` and `WEIGHTS_AND_CHECKPOINTS.md`.
 
 ## Full Asset Package
 
-The complete local reproducibility asset package, including the cleaned image datasets and model checkpoints, is available through Baidu Netdisk:
+The complete local reproducibility asset package, including the cleaned image datasets and model checkpoints not tracked by Git, is available through Baidu Netdisk:
 
 ```text
 Package: github_repro_archive_plant_disease_selective_clustering_20260721

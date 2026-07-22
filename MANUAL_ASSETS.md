@@ -1,6 +1,6 @@
 # Manual Assets Required For Full Reruns
 
-This lightweight GitHub repository does not include the cleaned image datasets or model checkpoints. To rerun the manuscript experiments from images, place the assets below after cloning the repository.
+This lightweight GitHub repository does not include the cleaned image datasets or model checkpoints directly in Git. These large assets are provided through the Baidu Netdisk package below. To rerun the manuscript experiments from images, download the package and place the assets in the required local paths after cloning the repository.
 
 ## Full Asset Package
 
