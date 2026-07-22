@@ -26,3 +26,8 @@
 Thumbs.db
 .idea/
 .vscode/
+
+# Local-only manuscript preview reports
+/reports/dataset_examples_confusion_report_20260722/
+/code/build_dataset_examples_confusion_report.py
+
