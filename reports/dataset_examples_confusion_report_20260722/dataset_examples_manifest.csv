@@ -1,0 +1,20 @@
+class_id,class_name,copied_file,display_dataset,source_file,source_folder
+0,Apple - apple scab,dataset_examples/PV-Fruit/0_Apple_-_apple_scab__0_0.jpg,PV-Fruit,F:\hospitol\github_repro_archive_plant_disease_selective_clustering_20260721\data\images_clean\F_new\0_0.jpg,F_new
+1,Apple - black rot,dataset_examples/PV-Fruit/1_Apple_-_black_rot__1_0.jpg,PV-Fruit,F:\hospitol\github_repro_archive_plant_disease_selective_clustering_20260721\data\images_clean\F_new\1_0.jpg,F_new
+2,Apple - cedar apple rust,dataset_examples/PV-Fruit/2_Apple_-_cedar_apple_rust__2_0.jpg,PV-Fruit,F:\hospitol\github_repro_archive_plant_disease_selective_clustering_20260721\data\images_clean\F_new\2_0.jpg,F_new
+6,Orange - citrus greening,dataset_examples/PV-Fruit/6_Orange_-_citrus_greening__6_0.jpg,PV-Fruit,F:\hospitol\github_repro_archive_plant_disease_selective_clustering_20260721\data\images_clean\F_new\6_0.jpg,F_new
+8,Strawberry - leaf scorch,dataset_examples/PV-Fruit/8_Strawberry_-_leaf_scorch__8_0.jpg,PV-Fruit,F:\hospitol\github_repro_archive_plant_disease_selective_clustering_20260721\data\images_clean\F_new\8_0.jpg,F_new
+0,Corn - common rust,dataset_examples/PV-Vegetable/0_Corn_-_common_rust__0_0.jpg,PV-Vegetable,F:\hospitol\github_repro_archive_plant_disease_selective_clustering_20260721\data\images_clean\V_new\0_0.jpg,V_new
+2,Bell pepper - bacterial spot,dataset_examples/PV-Vegetable/2_Bell_pepper_-_bacterial_spot__2_0.jpg,PV-Vegetable,F:\hospitol\github_repro_archive_plant_disease_selective_clustering_20260721\data\images_clean\V_new\2_0.jpg,V_new
+4,Potato - late blight,dataset_examples/PV-Vegetable/4_Potato_-_late_blight__4_0.jpg,PV-Vegetable,F:\hospitol\github_repro_archive_plant_disease_selective_clustering_20260721\data\images_clean\V_new\4_0.jpg,V_new
+5,Squash - powdery mildew,dataset_examples/PV-Vegetable/5_Squash_-_powdery_mildew__5_0.jpg,PV-Vegetable,F:\hospitol\github_repro_archive_plant_disease_selective_clustering_20260721\data\images_clean\V_new\5_0.jpg,V_new
+11,Tomato - yellow leaf curl virus,dataset_examples/PV-Vegetable/11_Tomato_-_yellow_leaf_curl_virus__11_0.jpg,PV-Vegetable,F:\hospitol\github_repro_archive_plant_disease_selective_clustering_20260721\data\images_clean\V_new\11_0.jpg,V_new
+0,Cashew - leaf miner,dataset_examples/MCLD-11/0_Cashew_-_leaf_miner__0_0.jpg,MCLD-11,F:\hospitol\github_repro_archive_plant_disease_selective_clustering_20260721\data\images_clean\M_new\0_0.jpg,M_new
+3,Corn - streak virus,dataset_examples/MCLD-11/3_Corn_-_streak_virus__3_0.jpg,MCLD-11,F:\hospitol\github_repro_archive_plant_disease_selective_clustering_20260721\data\images_clean\M_new\3_0.jpg,M_new
+5,Potato - nematode,dataset_examples/MCLD-11/5_Potato_-_nematode__5_0.jpg,MCLD-11,F:\hospitol\github_repro_archive_plant_disease_selective_clustering_20260721\data\images_clean\M_new\5_0.jpg,M_new
+8,Rice - leaf blast,dataset_examples/MCLD-11/8_Rice_-_leaf_blast__8_0.jpg,MCLD-11,F:\hospitol\github_repro_archive_plant_disease_selective_clustering_20260721\data\images_clean\M_new\8_0.jpg,M_new
+10,Tomato - Verticillium wilt,dataset_examples/MCLD-11/10_Tomato_-_Verticillium_wilt__10_0.jpg,MCLD-11,F:\hospitol\github_repro_archive_plant_disease_selective_clustering_20260721\data\images_clean\M_new\10_0.jpg,M_new
+0,Gourd,dataset_examples/DFLD-BR-4/0_Gourd__0_0.jpg,DFLD-BR-4,F:\hospitol\github_repro_archive_plant_disease_selective_clustering_20260721\data\images_clean\G_new\0_0.jpg,G_new
+1,Hibiscus,dataset_examples/DFLD-BR-4/1_Hibiscus__1_0.jpg,DFLD-BR-4,F:\hospitol\github_repro_archive_plant_disease_selective_clustering_20260721\data\images_clean\G_new\1_0.jpg,G_new
+2,Papaya,dataset_examples/DFLD-BR-4/2_Papaya__2_0.jpg,DFLD-BR-4,F:\hospitol\github_repro_archive_plant_disease_selective_clustering_20260721\data\images_clean\G_new\2_0.jpg,G_new
+3,Zucchini,dataset_examples/DFLD-BR-4/3_Zucchini__3_0.jpg,DFLD-BR-4,F:\hospitol\github_repro_archive_plant_disease_selective_clustering_20260721\data\images_clean\G_new\3_0.jpg,G_new

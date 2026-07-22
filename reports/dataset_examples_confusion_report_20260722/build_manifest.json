@@ -1,0 +1,7 @@
+{
+  "output": "F:\\hospitol\\github_repro_archive_plant_disease_selective_clustering_20260721_github_light\\reports\\dataset_examples_confusion_report_20260722",
+  "dataset_examples_zip": "F:\\hospitol\\github_repro_archive_plant_disease_selective_clustering_20260721_github_light\\reports\\dataset_examples_confusion_report_20260722\\dataset_examples.zip",
+  "confusion_matrix_results_zip": "F:\\hospitol\\github_repro_archive_plant_disease_selective_clustering_20260721_github_light\\reports\\dataset_examples_confusion_report_20260722\\confusion_matrix_results.zip",
+  "html": "F:\\hospitol\\github_repro_archive_plant_disease_selective_clustering_20260721_github_light\\reports\\dataset_examples_confusion_report_20260722\\index.html",
+  "source_note": "Real images and archived real CSVs only; no AI-generated images or inferred matrices."
+}
