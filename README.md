@@ -40,6 +40,18 @@ results/                      Seed-level raw and summary experimental CSVs
 
 These files should be provided separately, for example by GitHub Releases, cloud drive, institutional repository, or local copy. Their required paths and checksums are listed in `MANUAL_ASSETS.md` and `WEIGHTS_AND_CHECKPOINTS.md`.
 
+## Full Asset Package
+
+The complete local reproducibility asset package, including the cleaned image datasets and model checkpoints, is available through Baidu Netdisk:
+
+```text
+Package: github_repro_archive_plant_disease_selective_clustering_20260721
+URL: https://pan.baidu.com/s/1d8sLfgtz79Fjs-s7zvm2YQ?pwd=1234
+Extraction code: 1234
+```
+
+After downloading, place the cleaned dataset folders under `data/images_clean/` and the checkpoint files under `models/` as described in `MANUAL_ASSETS.md`.
+
 ## Public Download Sources
 
 The cleaned datasets in this project were reorganized from public plant-leaf image datasets. Download the original datasets from the sources below, then use the scripts and manifests in this repository to rebuild the flat folders expected by the experiments.

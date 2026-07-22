@@ -2,6 +2,14 @@
 
 This lightweight GitHub repository does not include the cleaned image files. It includes the manifests and audit records needed to verify the separately provided datasets.
 
+The complete local reproducibility asset package, including cleaned image folders and checkpoints, is available through Baidu Netdisk:
+
+```text
+Package: github_repro_archive_plant_disease_selective_clustering_20260721
+URL: https://pan.baidu.com/s/1d8sLfgtz79Fjs-s7zvm2YQ?pwd=1234
+Extraction code: 1234
+```
+
 The SHA256-cleaned image datasets used in the manuscript should be placed under:
 
 ```text

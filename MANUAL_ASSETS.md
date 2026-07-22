@@ -2,6 +2,18 @@
 
 This lightweight GitHub repository does not include the cleaned image datasets or model checkpoints. To rerun the manuscript experiments from images, place the assets below after cloning the repository.
 
+## Full Asset Package
+
+The complete local reproducibility asset package is available through Baidu Netdisk:
+
+```text
+Package: github_repro_archive_plant_disease_selective_clustering_20260721
+URL: https://pan.baidu.com/s/1d8sLfgtz79Fjs-s7zvm2YQ?pwd=1234
+Extraction code: 1234
+```
+
+This package should contain the cleaned image datasets and model checkpoints needed for full reruns. After downloading, place or copy the folders/files into the layout below.
+
 ## Required Directory Layout
 
 ```text
