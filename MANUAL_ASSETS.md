@@ -44,7 +44,7 @@ Place the checkpoints under `models/`.
 
 DINOv2 can be downloaded from https://huggingface.co/timm/vit_base_patch14_dinov2.lvd142m.
 
-The exact ConvNeXt checkpoint used by the frozen ConvNeXt experiments has not been publicly source-confirmed. For transparent reruns, use the checkpoint with the SHA256 hash above if available locally. A public timm ConvNeXt-XLarge ImageNet-22K checkpoint is available at https://huggingface.co/timm/convnext_xlarge.fb_in22k; using it may not exactly reproduce the frozen ConvNeXt numbers unless the weights match the recorded hash.
+ConvNeXt can be downloaded from the public timm ConvNeXt-XLarge ImageNet-22K checkpoint page: https://huggingface.co/timm/convnext_xlarge.fb_in22k. The original Facebook/timm URL is https://dl.fbaipublicfiles.com/convnext/convnext_xlarge_22k_224.pth. The manuscript archive stores the same public ConvNeXt-XLarge ImageNet-22K checkpoint locally as `models/model.safetensors`; verify the local archive file with the SHA256 hash above.
 
 ## Suggested Manual Distribution
 

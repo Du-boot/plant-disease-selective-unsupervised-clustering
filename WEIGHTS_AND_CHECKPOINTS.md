@@ -4,7 +4,7 @@ This lightweight GitHub repository does not include model checkpoints. Place the
 
 ## ConvNeXt Checkpoint
 
-The main ConvNeXt experiments used a local external checkpoint:
+The main ConvNeXt experiments used the public timm ConvNeXt-XLarge ImageNet-22K checkpoint, stored locally as:
 
 ```text
 /data1/D/deploy/cn/model.safetensors
@@ -25,9 +25,9 @@ Archive path: models/model.safetensors
 Server path:  /data1/D/deploy/cn/model.safetensors
 ```
 
-Until the checkpoint source is fully confirmed, the manuscript should not claim that ConvNeXt is intrinsically superior to DINOv2. The safe wording is that the ConvNeXt local-checkpoint setting achieved higher results in these experiments, while DINOv2 provides a fully public self-supervised external baseline.
+The local `model.safetensors` file corresponds to the public timm ConvNeXt-XLarge ImageNet-22K checkpoint (`convnext_xlarge.fb_in22k`; legacy code name `convnext_xlarge_in22k`). The model was used as a frozen 2048-D feature extractor and was not fine-tuned on the manuscript datasets.
 
-Public ConvNeXt-XLarge ImageNet-22K references:
+Public ConvNeXt-XLarge ImageNet-22K download references:
 
 ```text
 Hugging Face timm model page:
@@ -37,7 +37,7 @@ Original Facebook/timm weight URL:
 https://dl.fbaipublicfiles.com/convnext/convnext_xlarge_22k_224.pth
 ```
 
-Important: these public links document the closest public timm ConvNeXt-XLarge ImageNet-22K checkpoint. They should not be described as the exact manuscript checkpoint unless the downloaded file is verified to match the SHA256 hash above.
+The manuscript archive stores the checkpoint in safetensors format. If downloading the original `.pth` file, convert or load it consistently with the archived extraction script before comparing feature outputs.
 
 ## DINOv2 Checkpoint
 

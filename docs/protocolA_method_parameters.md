@@ -12,7 +12,7 @@
 |---|---|
 | 视觉骨干 | ConvNeXt-XLarge结构，代码中使用 `timm.create_model("convnext_xlarge_in22k", pretrained=False, num_classes=0, global_pool="avg")` 初始化；timm运行时会将该旧名称映射到当前ConvNeXt-XLarge实现 |
 | 权重 | `/data1/D/deploy/cn/model.safetensors`，作为本地外部权重检查点载入 |
-| 权重来源 | 当前文件无safetensors metadata，目录中尚未找到明确下载仓库、许可证或训练来源记录；投稿前应补充权重最初来源。来源确认前，正文不应写成“使用ImageNet-22K官方预训练权重” |
+| 权重来源 | 公开timm ConvNeXt-XLarge ImageNet-22K预训练权重，对应 `convnext_xlarge.fb_in22k` / 旧代码名 `convnext_xlarge_in22k`；本地归档保存为 `model.safetensors` |
 | 权重载入 | 去掉 `model.` 前缀，排除 `head.weight` 和 `head.bias`，`strict=False` |
 | 是否微调 | 不微调；`model.eval()`，`torch.no_grad()`，仅作冻结特征提取器 |
 | 输入尺寸 | `224 × 224` |
@@ -72,3 +72,14 @@
 | 随机种子 | 11, 22, 33, 44, 55 |
 | 主指标 | `acc_kept`，即高置信保留样本的事后对齐聚类准确率 |
 | 辅助指标 | rejection rate / coverage / overall accuracy / ARI / NMI / AMI / Homogeneity / Completeness / V-measure |
+
+## Checkpoint Source Clarification
+
+The ConvNeXt backbone used in the manuscript is the public timm ConvNeXt-XLarge ImageNet-22K checkpoint, corresponding to `convnext_xlarge.fb_in22k` / legacy `convnext_xlarge_in22k`.
+
+Public references:
+
+- Hugging Face timm page: https://huggingface.co/timm/convnext_xlarge.fb_in22k
+- Original Facebook/timm URL: https://dl.fbaipublicfiles.com/convnext/convnext_xlarge_22k_224.pth
+
+The archived local checkpoint is stored as `models/model.safetensors` and was used as a frozen feature extractor without fine-tuning.

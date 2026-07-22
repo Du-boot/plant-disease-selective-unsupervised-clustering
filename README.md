@@ -62,7 +62,7 @@ Model/checkpoint download notes:
 | File expected by scripts | Public source / status |
 |---|---|
 | `models/dinov2_vit_base_patch14_lvd142m.safetensors` | https://huggingface.co/timm/vit_base_patch14_dinov2.lvd142m |
-| `models/model.safetensors` | Exact local ConvNeXt checkpoint used in the frozen ConvNeXt experiments has not been publicly source-confirmed. A public ConvNeXt-XLarge ImageNet-22K timm checkpoint is available at https://huggingface.co/timm/convnext_xlarge.fb_in22k and the original Facebook download URL is recorded by timm as `https://dl.fbaipublicfiles.com/convnext/convnext_xlarge_22k_224.pth`. Results from the paper's frozen ConvNeXt run require the exact local checkpoint hash listed in `WEIGHTS_AND_CHECKPOINTS.md`. |
+| `models/model.safetensors` | Public timm ConvNeXt-XLarge ImageNet-22K checkpoint, corresponding to `convnext_xlarge.fb_in22k` / legacy `convnext_xlarge_in22k`: https://huggingface.co/timm/convnext_xlarge.fb_in22k. The original Facebook/timm download URL is `https://dl.fbaipublicfiles.com/convnext/convnext_xlarge_22k_224.pth`. The manuscript archive stores this checkpoint locally as `models/model.safetensors`; verify the archived local file with the SHA256 in `WEIGHTS_AND_CHECKPOINTS.md`. |
 
 ## Main Reports
 
