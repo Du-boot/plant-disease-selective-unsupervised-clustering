@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
-"""Build a dataset-example and confusion-matrix web report from real files.
+"""Build a report with real dataset examples and static confusion-matrix figures.
 
-This script copies representative original images from the SHA256-cleaned
-dataset folders and renders archived real confusion-matrix CSVs. It never
-infers matrices from manuscript summary numbers.
+Inputs are real files from the local full archive:
+- representative original images from data/images_clean
+- archived real confusion-matrix CSVs
+
+The script does not infer matrices from manuscript summary numbers and does
+not generate synthetic images.
 """
 from __future__ import annotations
 
@@ -13,6 +16,12 @@ import json
 import shutil
 import zipfile
 from pathlib import Path
+
+import matplotlib
+
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -30,11 +39,7 @@ DATASETS = {
             0: "Apple - apple scab",
             1: "Apple - black rot",
             2: "Apple - cedar apple rust",
-            3: "Cherry - powdery mildew",
-            4: "Grape - esca black measles",
-            5: "Grape - leaf blight",
             6: "Orange - citrus greening",
-            7: "Peach - bacterial spot",
             8: "Strawberry - leaf scorch",
         },
         "example_labels": [0, 1, 2, 6, 8],
@@ -43,16 +48,9 @@ DATASETS = {
         "folder": "V_new",
         "labels": {
             0: "Corn - common rust",
-            1: "Corn - northern leaf blight",
             2: "Bell pepper - bacterial spot",
-            3: "Potato - early blight",
             4: "Potato - late blight",
             5: "Squash - powdery mildew",
-            6: "Tomato - bacterial spot",
-            7: "Tomato - late blight",
-            8: "Tomato - septoria leaf spot",
-            9: "Tomato - two-spotted spider mite",
-            10: "Tomato - mosaic virus",
             11: "Tomato - yellow leaf curl virus",
         },
         "example_labels": [0, 2, 4, 5, 11],
@@ -61,15 +59,9 @@ DATASETS = {
         "folder": "M_new",
         "labels": {
             0: "Cashew - leaf miner",
-            1: "Cashew - red rust",
-            2: "Corn - leaf blight",
             3: "Corn - streak virus",
-            4: "Potato - fungi",
             5: "Potato - nematode",
-            6: "Rice - bacterial leaf blight",
-            7: "Rice - brown spot",
             8: "Rice - leaf blast",
-            9: "Tomato - septoria leaf spot",
             10: "Tomato - Verticillium wilt",
         },
         "example_labels": [0, 3, 5, 8, 10],
@@ -107,9 +99,20 @@ def write_csv(path: Path, rows: list[dict[str, object]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     keys = sorted({k for row in rows for k in row})
     with path.open("w", newline="", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=keys)
-        w.writeheader()
-        w.writerows(rows)
+        writer = csv.DictWriter(f, fieldnames=keys)
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def safe_name(text: str) -> str:
+    return (
+        text.replace("/", "-")
+        .replace("\\", "-")
+        .replace(" ", "_")
+        .replace("+", "plus")
+        .replace("(", "")
+        .replace(")", "")
+    )
 
 
 def first_image_for_label(dataset_folder: str, label: int) -> Path:
@@ -131,18 +134,18 @@ def copy_examples() -> list[dict[str, str]]:
         for label in meta["example_labels"]:
             src = first_image_for_label(meta["folder"], label)
             label_name = meta["labels"][label]
-            safe_label = label_name.replace("/", "-").replace(" ", "_")
-            dst_name = f"{label}_{safe_label}__{src.name}"
-            dst = dst_dir / dst_name
+            dst = dst_dir / f"{label}_{safe_name(label_name)}__{src.name}"
             shutil.copy2(src, dst)
-            rows.append({
-                "display_dataset": display_name,
-                "source_folder": meta["folder"],
-                "class_id": str(label),
-                "class_name": label_name,
-                "source_file": str(src),
-                "copied_file": str(dst.relative_to(OUT)).replace("\\", "/"),
-            })
+            rows.append(
+                {
+                    "display_dataset": display_name,
+                    "source_folder": meta["folder"],
+                    "class_id": str(label),
+                    "class_name": label_name,
+                    "source_file": str(src),
+                    "copied_file": str(dst.relative_to(OUT)).replace("\\", "/"),
+                }
+            )
     write_csv(OUT / "dataset_examples_manifest.csv", rows)
     return rows
 
@@ -151,15 +154,18 @@ def copy_matrix_sources() -> list[dict[str, str]]:
     rows: list[dict[str, str]] = []
     raw_root = OUT / "confusion_matrix_results" / "raw_csv"
     for name, src in MATRICES.items():
-        dst = raw_root / f"{name.replace(' ', '_').replace('+', 'plus')}.csv"
+        dst = raw_root / f"{safe_name(name)}.csv"
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(src, dst)
-        rows.append({
-            "item": name,
-            "source_file": str(src),
-            "copied_file": str(dst.relative_to(OUT)).replace("\\", "/"),
-            "data_type": "5-seed average row-normalized confusion matrix from archived real CSV",
-        })
+        rows.append(
+            {
+                "item": name,
+                "source_file": str(src),
+                "copied_file": str(dst.relative_to(OUT)).replace("\\", "/"),
+                "data_type": "5-seed average row-normalized confusion matrix from archived real CSV",
+            }
+        )
+
     extra_sources = [
         RESULTS_ROOT / "class_level_5seed" / "class_level_rejection_5seed_long.csv",
         RESULTS_ROOT / "class_level_5seed" / "class_level_rejection_5seed_summary.csv",
@@ -170,15 +176,17 @@ def copy_matrix_sources() -> list[dict[str, str]]:
         dst = raw_root / "supporting" / src.name
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(src, dst)
-        rows.append({
-            "item": src.stem,
-            "source_file": str(src),
-            "copied_file": str(dst.relative_to(OUT)).replace("\\", "/"),
-            "data_type": "supporting archived real CSV",
-        })
+        rows.append(
+            {
+                "item": src.stem,
+                "source_file": str(src),
+                "copied_file": str(dst.relative_to(OUT)).replace("\\", "/"),
+                "data_type": "supporting archived real CSV",
+            }
+        )
+
     write_csv(OUT / "confusion_matrix_results" / "matrix_source_manifest.csv", rows)
-    readme = OUT / "confusion_matrix_results" / "README.md"
-    readme.write_text(
+    (OUT / "confusion_matrix_results" / "README.md").write_text(
         "# Confusion Matrix Result Package\n\n"
         "This package contains archived real confusion-matrix CSVs and supporting seed-level result CSVs.\n\n"
         "Important scope note: local archives contain 5-seed average row-normalized matrices for "
@@ -190,27 +198,72 @@ def copy_matrix_sources() -> list[dict[str, str]]:
     return rows
 
 
-def matrix_to_html(path: Path) -> str:
+def load_matrix(path: Path) -> tuple[list[str], list[str], np.ndarray]:
     rows = read_csv(path)
     if not rows:
-        return "<p>CSV为空。</p>"
-    cols = [c for c in rows[0].keys() if c != "true_class"]
-    parts = ['<div class="matrix-scroll"><table class="matrix"><thead><tr><th>true \\ pred</th>']
-    parts += [f"<th>{html.escape(c)}</th>" for c in cols]
-    parts.append("</tr></thead><tbody>")
-    for row in rows:
-        parts.append(f"<tr><th>{html.escape(row.get('true_class', ''))}</th>")
-        for col in cols:
-            try:
-                v = float(row[col])
-            except Exception:
-                v = 0.0
-            alpha = min(0.92, 0.08 + 0.78 * max(0.0, min(1.0, v)))
-            text = f"{v * 100:.1f}%"
-            parts.append(f'<td style="background:rgba(24,112,96,{alpha:.3f})">{text}</td>')
-        parts.append("</tr>")
-    parts.append("</tbody></table></div>")
-    return "".join(parts)
+        return [], [], np.zeros((0, 0), dtype=float)
+    col_names = [c for c in rows[0].keys() if c != "true_class"]
+    row_names = [r.get("true_class", "") for r in rows]
+    mat = np.asarray([[float(r.get(c, 0) or 0) for c in col_names] for r in rows], dtype=float)
+    return row_names, col_names, mat
+
+
+def render_matrix_figure(name: str, src_csv: Path) -> dict[str, str]:
+    row_names, col_names, mat = load_matrix(src_csv)
+    if mat.size == 0:
+        raise ValueError(f"Empty matrix: {src_csv}")
+
+    n_rows, n_cols = mat.shape
+    fig_w = max(7.5, 0.52 * n_cols + 3.2)
+    fig_h = max(5.2, 0.48 * n_rows + 2.5)
+    fig, ax = plt.subplots(figsize=(fig_w, fig_h), dpi=180)
+    im = ax.imshow(mat, cmap="YlGnBu", vmin=0, vmax=1, aspect="auto")
+
+    ax.set_title(name, fontsize=12, pad=12)
+    ax.set_xlabel("Post-hoc aligned predicted class", fontsize=10)
+    ax.set_ylabel("True class", fontsize=10)
+    ax.set_xticks(np.arange(n_cols))
+    ax.set_yticks(np.arange(n_rows))
+    ax.set_xticklabels(col_names, rotation=45, ha="right", fontsize=7)
+    ax.set_yticklabels(row_names, fontsize=7)
+    ax.tick_params(length=0)
+
+    for i in range(n_rows):
+        row_max = float(mat[i].max()) if n_cols else 0.0
+        for j in range(n_cols):
+            val = float(mat[i, j])
+            if val >= 0.005 or val == row_max:
+                color = "white" if val >= 0.55 else "#15202b"
+                ax.text(j, i, f"{val * 100:.1f}", ha="center", va="center", fontsize=6, color=color)
+
+    for spine in ax.spines.values():
+        spine.set_visible(False)
+    ax.set_xticks(np.arange(-0.5, n_cols, 1), minor=True)
+    ax.set_yticks(np.arange(-0.5, n_rows, 1), minor=True)
+    ax.grid(which="minor", color="white", linestyle="-", linewidth=0.8)
+    ax.tick_params(which="minor", bottom=False, left=False)
+
+    cbar = fig.colorbar(im, ax=ax, fraction=0.026, pad=0.02)
+    cbar.ax.set_ylabel("Row-normalized proportion", rotation=270, labelpad=14, fontsize=9)
+    cbar.ax.tick_params(labelsize=8)
+    fig.tight_layout()
+
+    stem = OUT / "confusion_matrix_figures" / safe_name(name)
+    stem.parent.mkdir(parents=True, exist_ok=True)
+    files = {
+        "png": stem.with_suffix(".png"),
+        "pdf": stem.with_suffix(".pdf"),
+        "tiff": stem.with_suffix(".tiff"),
+    }
+    fig.savefig(files["png"], dpi=300, bbox_inches="tight")
+    fig.savefig(files["pdf"], bbox_inches="tight")
+    fig.savefig(files["tiff"], dpi=300, bbox_inches="tight")
+    plt.close(fig)
+    return {k: str(v.relative_to(OUT)).replace("\\", "/") for k, v in files.items()}
+
+
+def render_all_matrix_figures() -> dict[str, dict[str, str]]:
+    return {name: render_matrix_figure(name, path) for name, path in MATRICES.items()}
 
 
 def summary_table(path: Path, dataset: str, method: str = "all3") -> str:
@@ -234,36 +287,49 @@ def summary_table(path: Path, dataset: str, method: str = "all3") -> str:
     return "".join(parts)
 
 
-def write_html(example_rows: list[dict[str, str]], matrix_rows: list[dict[str, str]]) -> None:
+def matrix_block(name: str, figure_files: dict[str, dict[str, str]]) -> str:
+    files = figure_files[name]
+    csv_rel = f"confusion_matrix_results/raw_csv/{safe_name(name)}.csv"
+    return (
+        f"<section><h3>{html.escape(name)}</h3>"
+        f'<img class="matrix-img" src="{html.escape(files["png"])}" alt="{html.escape(name)}">'
+        "<p class='file-links'>"
+        f'<a href="{html.escape(files["png"])}">PNG</a>'
+        f'<a href="{html.escape(files["pdf"])}">PDF</a>'
+        '<a href="confusion_matrix_figures.zip">TIFF package</a>'
+        f'<a href="{html.escape(csv_rel)}">source CSV</a>'
+        "</p></section>"
+    )
+
+
+def write_html(example_rows: list[dict[str, str]], figure_files: dict[str, dict[str, str]]) -> None:
     galleries = []
     for display_name in DATASETS:
-        imgs = [r for r in example_rows if r["display_dataset"] == display_name]
         cards = []
-        for r in imgs:
-            rel = r["copied_file"]
+        for r in [x for x in example_rows if x["display_dataset"] == display_name]:
             cards.append(
-                '<figure>'
-                f'<img src="{html.escape(rel)}" alt="{html.escape(display_name + " " + r["class_name"])}">'
+                "<figure>"
+                f'<img src="{html.escape(r["copied_file"])}" alt="{html.escape(display_name + " " + r["class_name"])}">'
                 f'<figcaption>{html.escape(r["class_name"])}<br><span>{html.escape(Path(r["source_file"]).name)}</span></figcaption>'
-                '</figure>'
+                "</figure>"
             )
         galleries.append(f"<section><h3>{html.escape(display_name)}</h3><div class='gallery'>{''.join(cards)}</div></section>")
 
-    main_matrices = [
-        ("PV-Vegetable 保留样本矩阵", MATRICES["PV-Vegetable kept"]),
-        ("PV-Vegetable 全样本矩阵（含Rejected列）", MATRICES["PV-Vegetable all + Rejected"]),
-        ("MCLD-9 保留样本矩阵", MATRICES["MCLD-9 kept"]),
-        ("MCLD-9 全样本矩阵（含Rejected列）", MATRICES["MCLD-9 all + Rejected"]),
+    main_names = [
+        "PV-Vegetable kept",
+        "PV-Vegetable all + Rejected",
+        "MCLD-9 kept",
+        "MCLD-9 all + Rejected",
     ]
-    supplement_matrices = [
-        ("PV-Fruit 保留样本矩阵", MATRICES["PV-Fruit kept"]),
-        ("PV-Fruit 全样本矩阵（含Rejected列）", MATRICES["PV-Fruit all + Rejected"]),
-        ("DFLD-BR-4 保留样本矩阵", MATRICES["DFLD-BR-4 kept"]),
-        ("DFLD-BR-4 全样本矩阵（含Rejected列）", MATRICES["DFLD-BR-4 all + Rejected"]),
+    supplement_names = [
+        "PV-Fruit kept",
+        "PV-Fruit all + Rejected",
+        "DFLD-BR-4 kept",
+        "DFLD-BR-4 all + Rejected",
     ]
 
-    main_html = "".join(f"<section><h3>{title}</h3>{matrix_to_html(path)}</section>" for title, path in main_matrices)
-    supp_html = "".join(f"<section><h3>{title}</h3>{matrix_to_html(path)}</section>" for title, path in supplement_matrices)
+    main_html = "".join(matrix_block(name, figure_files) for name in main_names)
+    supp_html = "".join(matrix_block(name, figure_files) for name in supplement_names)
     mcld11_html = summary_table(RESULTS_ROOT / "m_new_full" / "M_new_full_main.csv", "M_new", "all3")
 
     html_doc = f"""<!doctype html>
@@ -271,7 +337,7 @@ def write_html(example_rows: list[dict[str, str]], matrix_rows: list[dict[str, s
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>数据集代表图片与混淆矩阵真实结果报告</title>
+<title>数据集代表图片与静态混淆矩阵报告</title>
 <style>
 body{{margin:0;background:#f6f7f9;color:#18212f;font-family:Arial,'Microsoft YaHei',sans-serif;line-height:1.55}}
 header{{background:#163b45;color:white;padding:28px 40px}}
@@ -282,35 +348,35 @@ h1{{margin:0 0 8px;font-size:28px}} h2{{margin:28px 0 12px;border-left:5px solid
 figure{{margin:0;background:#fff;border:1px solid #dce3e8;border-radius:8px;overflow:hidden}}
 figure img{{width:100%;height:150px;object-fit:cover;display:block;background:#eef2f5}}
 figcaption{{padding:9px 10px;font-size:13px}} figcaption span{{color:#667085;font-size:12px}}
-.matrix-scroll{{overflow:auto;background:#fff;border:1px solid #dce3e8;border-radius:8px;margin-bottom:18px}}
+.matrix-img{{width:100%;max-width:1120px;background:white;border:1px solid #dce3e8;border-radius:8px;display:block}}
 table{{border-collapse:collapse;width:max-content;min-width:100%;font-size:12px;background:#fff}}
 th,td{{border:1px solid #dce3e8;padding:6px 8px;text-align:center;white-space:nowrap}}
-th{{background:#eef3f4;color:#1f3138;position:sticky;top:0;z-index:1}}
-.matrix th:first-child{{position:sticky;left:0;z-index:2;text-align:left;max-width:220px;white-space:normal}}
-.matrix td{{min-width:62px;color:#071b17;font-weight:600}}
+th{{background:#eef3f4;color:#1f3138}}
 a{{color:#0f766e}} code{{background:#eef3f4;padding:2px 5px;border-radius:4px}}
 .links{{display:flex;gap:12px;flex-wrap:wrap}} .button{{background:#187060;color:white;text-decoration:none;padding:9px 12px;border-radius:6px}}
+.file-links{{font-size:13px;margin:6px 0 18px}} .file-links a{{margin-right:12px}}
 </style>
 </head>
 <body>
 <header>
-<h1>数据集代表图片与混淆矩阵真实结果报告</h1>
-<p>使用真实清洗数据集原图和已归档真实聚类结果CSV生成；未根据论文汇总数字推测或补画。</p>
+<h1>数据集代表图片与静态混淆矩阵报告</h1>
+<p>使用真实清洗数据集原图和已归档真实聚类结果CSV生成；混淆矩阵为静态PNG/PDF/TIFF图件。</p>
 </header>
 <main>
 <section class="note">
 <h2>数据口径</h2>
-<p>代表图片来自完整归档中的 <code>data/images_clean/</code>，为SHA256去重后实验使用的真实图像文件。混淆矩阵来自归档CSV中的5个随机种子平均按行归一化矩阵。当前本地归档未包含逐样本 <code>true_label, aligned_pred_label, kept, seed</code> CSV，因此本报告没有伪造样本级CSV；压缩包中保留真实矩阵CSV和MCLD-11 seed级汇总表。</p>
+<p>代表图片来自完整归档中的 <code>data/images_clean/</code>，为SHA256去重后实验使用的真实图像文件。混淆矩阵图片由归档真实CSV直接绘制为静态PNG/PDF/TIFF，不是网页端HTML表格截图，也没有根据论文汇总数字推测。当前本地归档未包含逐样本 <code>true_label, aligned_pred_label, kept, seed</code> CSV，因此本报告没有伪造样本级CSV；压缩包中保留真实矩阵CSV和MCLD-11 seed级汇总表。</p>
 <div class="links">
 <a class="button" href="dataset_examples.zip">下载数据集代表图片包</a>
-<a class="button" href="confusion_matrix_results.zip">下载混淆矩阵原始结果包</a>
+<a class="button" href="confusion_matrix_results.zip">下载混淆矩阵CSV结果包</a>
+<a class="button" href="confusion_matrix_figures.zip">下载静态混淆矩阵图片包</a>
 </div>
 </section>
 <h2>图2候选：四个数据集的真实代表性叶片图像</h2>
 {''.join(galleries)}
 <h2>正文混淆矩阵图候选</h2>
 {main_html}
-<h2>补充材料矩阵</h2>
+<h2>补充材料矩阵图</h2>
 {supp_html}
 <section>
 <h3>MCLD-11 seed级all3结果表</h3>
@@ -320,7 +386,7 @@ a{{color:#0f766e}} code{{background:#eef3f4;padding:2px 5px;border-radius:4px}}
 <section>
 <h2>文件清单</h2>
 <p>图片包清单：<a href="dataset_examples_manifest.csv">dataset_examples_manifest.csv</a></p>
-<p>矩阵包清单：<a href="confusion_matrix_results/matrix_source_manifest.csv">matrix_source_manifest.csv</a></p>
+<p>矩阵CSV包清单：<a href="confusion_matrix_results/matrix_source_manifest.csv">matrix_source_manifest.csv</a></p>
 </section>
 </main>
 </body>
@@ -340,16 +406,19 @@ def zip_dir(src: Path, dst: Path) -> None:
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     example_rows = copy_examples()
-    matrix_rows = copy_matrix_sources()
-    write_html(example_rows, matrix_rows)
+    copy_matrix_sources()
+    figure_files = render_all_matrix_figures()
+    write_html(example_rows, figure_files)
     zip_dir(OUT / "dataset_examples", OUT / "dataset_examples.zip")
     zip_dir(OUT / "confusion_matrix_results", OUT / "confusion_matrix_results.zip")
+    zip_dir(OUT / "confusion_matrix_figures", OUT / "confusion_matrix_figures.zip")
     manifest = {
         "output": str(OUT),
         "dataset_examples_zip": str(OUT / "dataset_examples.zip"),
         "confusion_matrix_results_zip": str(OUT / "confusion_matrix_results.zip"),
+        "confusion_matrix_figures_zip": str(OUT / "confusion_matrix_figures.zip"),
         "html": str(OUT / "index.html"),
-        "source_note": "Real images and archived real CSVs only; no AI-generated images or inferred matrices.",
+        "source_note": "Real images and archived real CSVs only; static confusion-matrix figures are rendered from CSV; no AI-generated images or inferred matrices.",
     }
     (OUT / "build_manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(manifest, ensure_ascii=False, indent=2))
