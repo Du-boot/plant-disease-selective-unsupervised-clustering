@@ -1,0 +1,10 @@
+true_class,Cashew - leaf miner,Cashew - red rust,Corn - leaf blight,Corn - streak virus,Potato - fungi,Rice - bacterial leaf blight,Rice - brown spot,Tomato - septoria leaf spot,Tomato - verticulium wilt
+Cashew - leaf miner,0.9981981981981981,0.0018018018018018018,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Cashew - red rust,0.005309734513274336,0.9946902654867257,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Corn - leaf blight,0.0,0.0,0.8985078543364983,0.10149214566350176,0.0,0.0,0.0,0.0,0.0
+Corn - streak virus,0.0,0.0,0.16291530194597786,0.8370846980540222,0.0,0.0,0.0,0.0,0.0
+Potato - fungi,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0
+Rice - bacterial leaf blight,0.0,0.0,0.0,0.0,0.0,0.9939060323903849,0.006093967609615195,0.0,0.0
+Rice - brown spot,0.0,0.0,0.0,0.0,0.0,0.1686153846153846,0.8313846153846154,0.0,0.0
+Tomato - septoria leaf spot,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.9348061690200135,0.06519383097998664
+Tomato - verticulium wilt,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.3388065196071847,0.6611934803928152

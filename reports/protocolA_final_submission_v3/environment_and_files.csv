@@ -1,0 +1,16 @@
+key,value
+python,"3.9.24 (main, Oct 14 2025, 16:06:14)  [GCC 11.2.0]"
+platform,Linux-5.15.0-139-generic-x86_64-with-glibc2.31
+cpu,13th Gen Intel(R) Core(TM) i9-13900K
+memory,125Gi
+gpu,"NVIDIA GeForce RTX 4090, 24564 MiB
+NVIDIA GeForce RTX 4090, 24564 MiB"
+numpy_version,2.0.2
+sklearn_version,1.6.1
+umap_version,0.5.9.post2
+torch_version,2.8.0+cu128
+PIL_version,11.3.0
+feature_file_F_new.npy_bytes,114278528
+feature_file_G_new.npy_bytes,33759360
+feature_file_M_new_drop5_drop7.npy_bytes,37429376
+feature_file_V_new.npy_bytes,165658752

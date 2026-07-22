@@ -1,0 +1,23 @@
+# Raw/generated heavy artifacts.
+# The manuscript clean image datasets are intentionally archived under
+# data/images_clean/ so that the experiments can be reproduced.
+/data/raw/
+/data/tmp/
+/outputs/
+**/__pycache__/
+*.pyc
+
+# Large feature and clustering caches
+*.npy
+*.npz
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+!/models/model.safetensors
+
+# Local OS/editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

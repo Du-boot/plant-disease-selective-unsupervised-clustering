@@ -1,0 +1,130 @@
+[2026-07-21 15:04:31] extract DINOv2 features: F_new n=13950
+[2026-07-21 15:04:34] F_new: batch 20/146
+[2026-07-21 15:04:37] F_new: batch 40/146
+[2026-07-21 15:04:40] F_new: batch 60/146
+[2026-07-21 15:04:43] F_new: batch 80/146
+[2026-07-21 15:04:46] F_new: batch 100/146
+[2026-07-21 15:04:48] F_new: batch 120/146
+[2026-07-21 15:04:51] F_new: batch 140/146
+[2026-07-21 15:04:52] F_new: saved (13950, 768) in 20.9s
+[2026-07-21 15:04:52] extract DINOv2 features: V_new n=20214
+[2026-07-21 15:04:55] V_new: batch 20/211
+[2026-07-21 15:04:58] V_new: batch 40/211
+[2026-07-21 15:05:01] V_new: batch 60/211
+[2026-07-21 15:05:04] V_new: batch 80/211
+[2026-07-21 15:05:06] V_new: batch 100/211
+[2026-07-21 15:05:09] V_new: batch 120/211
+[2026-07-21 15:05:12] V_new: batch 140/211
+[2026-07-21 15:05:15] V_new: batch 160/211
+[2026-07-21 15:05:18] V_new: batch 180/211
+[2026-07-21 15:05:20] V_new: batch 200/211
+[2026-07-21 15:05:22] V_new: saved (20214, 768) in 29.9s
+[2026-07-21 15:05:22] extract DINOv2 features: M_new n=4842
+[2026-07-21 15:05:25] M_new: batch 20/51
+[2026-07-21 15:05:29] M_new: batch 40/51
+[2026-07-21 15:05:32] M_new: saved (4842, 768) in 9.6s
+[2026-07-21 15:05:32] extract DINOv2 features: M_new_drop5_drop7 n=4440
+[2026-07-21 15:05:35] M_new_drop5_drop7: batch 20/47
+[2026-07-21 15:05:41] M_new_drop5_drop7: batch 40/47
+[2026-07-21 15:05:42] M_new_drop5_drop7: saved (4440, 768) in 10.6s
+[2026-07-21 15:05:42] cluster: F_new__dinov2_raw__k20__seed11.npz
+[2026-07-21 15:06:42] UMAP: F_new__dinov2_umap100__seed11.npy
+/data/anaconda3/envs/deploy/lib/python3.9/site-packages/umap/umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
+[2026-07-21 15:06:58] cluster: F_new__dinov2_umap100__k20__seed11.npz
+[2026-07-21 15:07:05] cluster: F_new__dinov2_raw__k20__seed22.npz
+[2026-07-21 15:08:00] UMAP: F_new__dinov2_umap100__seed22.npy
+/data/anaconda3/envs/deploy/lib/python3.9/site-packages/umap/umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
+[2026-07-21 15:08:09] cluster: F_new__dinov2_umap100__k20__seed22.npz
+[2026-07-21 15:08:15] cluster: F_new__dinov2_raw__k20__seed33.npz
+[2026-07-21 15:09:12] UMAP: F_new__dinov2_umap100__seed33.npy
+/data/anaconda3/envs/deploy/lib/python3.9/site-packages/umap/umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
+[2026-07-21 15:09:21] cluster: F_new__dinov2_umap100__k20__seed33.npz
+[2026-07-21 15:09:26] cluster: F_new__dinov2_raw__k20__seed44.npz
+[2026-07-21 15:10:25] UMAP: F_new__dinov2_umap100__seed44.npy
+/data/anaconda3/envs/deploy/lib/python3.9/site-packages/umap/umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
+[2026-07-21 15:10:34] cluster: F_new__dinov2_umap100__k20__seed44.npz
+[2026-07-21 15:10:40] cluster: F_new__dinov2_raw__k20__seed55.npz
+[2026-07-21 15:11:38] UMAP: F_new__dinov2_umap100__seed55.npy
+/data/anaconda3/envs/deploy/lib/python3.9/site-packages/umap/umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
+[2026-07-21 15:11:47] cluster: F_new__dinov2_umap100__k20__seed55.npz
+[2026-07-21 15:11:55] cluster: V_new__dinov2_raw__k20__seed11.npz
+[2026-07-21 15:13:59] UMAP: V_new__dinov2_umap100__seed11.npy
+/data/anaconda3/envs/deploy/lib/python3.9/site-packages/umap/umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
+[2026-07-21 15:14:12] cluster: V_new__dinov2_umap100__k20__seed11.npz
+[2026-07-21 15:14:24] cluster: V_new__dinov2_raw__k20__seed22.npz
+[2026-07-21 15:16:27] UMAP: V_new__dinov2_umap100__seed22.npy
+/data/anaconda3/envs/deploy/lib/python3.9/site-packages/umap/umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
+[2026-07-21 15:16:41] cluster: V_new__dinov2_umap100__k20__seed22.npz
+[2026-07-21 15:16:53] cluster: V_new__dinov2_raw__k20__seed33.npz
+[2026-07-21 15:18:54] UMAP: V_new__dinov2_umap100__seed33.npy
+/data/anaconda3/envs/deploy/lib/python3.9/site-packages/umap/umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
+[2026-07-21 15:19:07] cluster: V_new__dinov2_umap100__k20__seed33.npz
+[2026-07-21 15:19:19] cluster: V_new__dinov2_raw__k20__seed44.npz
+[2026-07-21 15:21:18] UMAP: V_new__dinov2_umap100__seed44.npy
+/data/anaconda3/envs/deploy/lib/python3.9/site-packages/umap/umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
+[2026-07-21 15:21:31] cluster: V_new__dinov2_umap100__k20__seed44.npz
+[2026-07-21 15:21:43] cluster: V_new__dinov2_raw__k20__seed55.npz
+[2026-07-21 15:23:40] UMAP: V_new__dinov2_umap100__seed55.npy
+/data/anaconda3/envs/deploy/lib/python3.9/site-packages/umap/umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
+[2026-07-21 15:23:53] cluster: V_new__dinov2_umap100__k20__seed55.npz
+[2026-07-21 15:24:04] cluster: M_new__dinov2_raw__k20__seed11.npz
+[2026-07-21 15:24:11] UMAP: M_new__dinov2_umap100__seed11.npy
+/data/anaconda3/envs/deploy/lib/python3.9/site-packages/umap/umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
+[2026-07-21 15:24:17] cluster: M_new__dinov2_umap100__k20__seed11.npz
+[2026-07-21 15:24:18] cluster: M_new__dinov2_raw__k20__seed22.npz
+[2026-07-21 15:24:24] UMAP: M_new__dinov2_umap100__seed22.npy
+/data/anaconda3/envs/deploy/lib/python3.9/site-packages/umap/umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
+[2026-07-21 15:24:35] cluster: M_new__dinov2_umap100__k20__seed22.npz
+[2026-07-21 15:24:36] cluster: M_new__dinov2_raw__k20__seed33.npz
+[2026-07-21 15:24:42] UMAP: M_new__dinov2_umap100__seed33.npy
+/data/anaconda3/envs/deploy/lib/python3.9/site-packages/umap/umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
+[2026-07-21 15:24:49] cluster: M_new__dinov2_umap100__k20__seed33.npz
+[2026-07-21 15:24:49] cluster: M_new__dinov2_raw__k20__seed44.npz
+[2026-07-21 15:24:56] UMAP: M_new__dinov2_umap100__seed44.npy
+/data/anaconda3/envs/deploy/lib/python3.9/site-packages/umap/umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
+[2026-07-21 15:25:06] cluster: M_new__dinov2_umap100__k20__seed44.npz
+[2026-07-21 15:25:06] cluster: M_new__dinov2_raw__k20__seed55.npz
+[2026-07-21 15:25:13] UMAP: M_new__dinov2_umap100__seed55.npy
+/data/anaconda3/envs/deploy/lib/python3.9/site-packages/umap/umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
+[2026-07-21 15:25:20] cluster: M_new__dinov2_umap100__k20__seed55.npz
+[2026-07-21 15:25:20] cluster: M_new_drop5_drop7__dinov2_raw__k20__seed11.npz
+[2026-07-21 15:25:26] UMAP: M_new_drop5_drop7__dinov2_umap100__seed11.npy
+/data/anaconda3/envs/deploy/lib/python3.9/site-packages/umap/umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
+[2026-07-21 15:25:32] cluster: M_new_drop5_drop7__dinov2_umap100__k20__seed11.npz
+[2026-07-21 15:25:32] cluster: M_new_drop5_drop7__dinov2_raw__k20__seed22.npz
+[2026-07-21 15:25:38] UMAP: M_new_drop5_drop7__dinov2_umap100__seed22.npy
+/data/anaconda3/envs/deploy/lib/python3.9/site-packages/umap/umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
+[2026-07-21 15:25:44] cluster: M_new_drop5_drop7__dinov2_umap100__k20__seed22.npz
+[2026-07-21 15:25:45] cluster: M_new_drop5_drop7__dinov2_raw__k20__seed33.npz
+[2026-07-21 15:25:50] UMAP: M_new_drop5_drop7__dinov2_umap100__seed33.npy
+/data/anaconda3/envs/deploy/lib/python3.9/site-packages/umap/umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
+[2026-07-21 15:25:56] cluster: M_new_drop5_drop7__dinov2_umap100__k20__seed33.npz
+[2026-07-21 15:25:57] cluster: M_new_drop5_drop7__dinov2_raw__k20__seed44.npz
+[2026-07-21 15:26:02] UMAP: M_new_drop5_drop7__dinov2_umap100__seed44.npy
+/data/anaconda3/envs/deploy/lib/python3.9/site-packages/umap/umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
+[2026-07-21 15:26:08] cluster: M_new_drop5_drop7__dinov2_umap100__k20__seed44.npz
+[2026-07-21 15:26:09] cluster: M_new_drop5_drop7__dinov2_raw__k20__seed55.npz
+[2026-07-21 15:26:15] UMAP: M_new_drop5_drop7__dinov2_umap100__seed55.npy
+/data/anaconda3/envs/deploy/lib/python3.9/site-packages/umap/umap_.py:1952: UserWarning: n_jobs value 1 overridden to 1 by setting random_state. Use no seed for parallelism.
+  warn(
+[2026-07-21 15:26:21] cluster: M_new_drop5_drop7__dinov2_umap100__k20__seed55.npz
+[2026-07-21 15:26:22] done: /data1/D/hostal/external_baselines_dinov2_20260721

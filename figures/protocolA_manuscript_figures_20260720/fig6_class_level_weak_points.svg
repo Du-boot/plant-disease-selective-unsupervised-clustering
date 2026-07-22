@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Created with matplotlib (https://matplotlib.org/) -->
+<svg height="221.144pt" version="1.1" viewBox="0 0 445.590312 221.144" width="445.590312pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <style type="text/css">
+*{stroke-linecap:butt;stroke-linejoin:round;}
+  </style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M -0 221.144 
+L 445.590312 221.144 
+L 445.590312 0 
+L -0 0 
+z
+" style="fill:#ffffff;"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 114.750313 190.88775 
+L 438.390312 190.88775 
+L 438.390312 19.02375 
+L 114.750313 19.02375 
+z
+" style="fill:#ffffff;"/>
+   </g>
+   <g id="patch_3">
+    <path clip-path="url(#pa26c8a6660)" d="M 114.750313 183.07575 
+L 421.342272 183.07575 
+L 421.342272 177.599296 
+L 114.750313 177.599296 
+z
+" style="fill:#4c78a8;"/>
+   </g>
+   <g id="patch_4">
+    <path clip-path="url(#pa26c8a6660)" d="M 114.750313 166.968534 
+L 421.100549 166.968534 
+L 421.100549 161.49208 
+L 114.750313 161.49208 
+z
+" style="fill:#4c78a8;"/>
+   </g>
+   <g id="patch_5">
+    <path clip-path="url(#pa26c8a6660)" d="M 114.750313 150.861317 
+L 418.540294 150.861317 
+L 418.540294 145.384863 
+L 114.750313 145.384863 
+z
+" style="fill:#4c78a8;"/>
+   </g>
+   <g id="patch_6">
+    <path clip-path="url(#pa26c8a6660)" d="M 114.750313 134.754101 
+L 410.171901 134.754101 
+L 410.171901 129.277647 
+L 114.750313 129.277647 
+z
+" style="fill:#4c78a8;"/>
+   </g>
+   <g id="patch_7">
+    <path clip-path="url(#pa26c8a6660)" d="M 114.750313 118.646884 
+L 402.884283 118.646884 
+L 402.884283 113.17043 
+L 114.750313 113.17043 
+z
+" style="fill:#4c78a8;"/>
+   </g>
+   <g id="patch_8">
+    <path clip-path="url(#pa26c8a6660)" d="M 114.750313 102.539668 
+L 392.354126 102.539668 
+L 392.354126 97.063214 
+L 114.750313 97.063214 
+z
+" style="fill:#4c78a8;"/>
+   </g>
+   <g id="patch_9">
+    <path clip-path="url(#pa26c8a6660)" d="M 114.750313 86.432451 
+L 391.696105 86.432451 
+L 391.696105 80.955997 
+L 114.750313 80.955997 
+z
+" style="fill:#4c78a8;"/>
+   </g>
+   <g id="patch_10">
+    <path clip-path="url(#pa26c8a6660)" d="M 114.750313 70.325235 
+L 372.763733 70.325235 
+L 372.763733 64.848781 
+L 114.750313 64.848781 
+z
+" style="fill:#4c78a8;"/>
+   </g>
+   <g id="patch_11">
+    <path clip-path="url(#pa26c8a6660)" d="M 114.750313 54.218018 
+L 371.006805 54.218018 
+L 371.006805 48.741564 
+L 114.750313 48.741564 
+z
+" style="fill:#4c78a8;"/>
+   </g>
+   <g id="patch_12">
+    <path clip-path="url(#pa26c8a6660)" d="M 114.750313 38.110802 
+L 318.549034 38.110802 
+L 318.549034 32.634348 
+L 114.750313 32.634348 
+z
+" style="fill:#4c78a8;"/>
+   </g>
+   <g id="patch_13">
+    <path clip-path="url(#pa26c8a6660)" d="M 114.750313 177.277152 
+L 114.750313 177.277152 
+L 114.750313 171.800698 
+L 114.750313 171.800698 
+z
+" style="fill:#e45756;"/>
+   </g>
+   <g id="patch_14">
+    <path clip-path="url(#pa26c8a6660)" d="M 114.750313 161.169936 
+L 116.431559 161.169936 
+L 116.431559 155.693482 
+L 114.750313 155.693482 
+z
+" style="fill:#e45756;"/>
+   </g>
+   <g id="patch_15">
+    <path clip-path="url(#pa26c8a6660)" d="M 114.750313 145.062719 
+L 176.500452 145.062719 
+L 176.500452 139.586265 
+L 114.750313 139.586265 
+z
+" style="fill:#e45756;"/>
+   </g>
+   <g id="patch_16">
+    <path clip-path="url(#pa26c8a6660)" d="M 114.750313 128.955503 
+L 173.84136 128.955503 
+L 173.84136 123.479049 
+L 114.750313 123.479049 
+z
+" style="fill:#e45756;"/>
+   </g>
+   <g id="patch_17">
+    <path clip-path="url(#pa26c8a6660)" d="M 114.750313 112.848286 
+L 191.571676 112.848286 
+L 191.571676 107.371832 
+L 114.750313 107.371832 
+z
+" style="fill:#e45756;"/>
+   </g>
+   <g id="patch_18">
+    <path clip-path="url(#pa26c8a6660)" d="M 114.750313 96.74107 
+L 204.349002 96.74107 
+L 204.349002 91.264616 
+L 114.750313 91.264616 
+z
+" style="fill:#e45756;"/>
+   </g>
+   <g id="patch_19">
+    <path clip-path="url(#pa26c8a6660)" d="M 114.750313 80.633853 
+L 124.185881 80.633853 
+L 124.185881 75.157399 
+L 114.750313 75.157399 
+z
+" style="fill:#e45756;"/>
+   </g>
+   <g id="patch_20">
+    <path clip-path="url(#pa26c8a6660)" d="M 114.750313 64.526637 
+L 149.222223 64.526637 
+L 149.222223 59.050183 
+L 114.750313 59.050183 
+z
+" style="fill:#e45756;"/>
+   </g>
+   <g id="patch_21">
+    <path clip-path="url(#pa26c8a6660)" d="M 114.750313 48.41942 
+L 114.750313 48.41942 
+L 114.750313 42.942966 
+L 114.750313 42.942966 
+z
+" style="fill:#e45756;"/>
+   </g>
+   <g id="patch_22">
+    <path clip-path="url(#pa26c8a6660)" d="M 114.750313 32.312204 
+L 195.631688 32.312204 
+L 195.631688 26.83575 
+L 114.750313 26.83575 
+z
+" style="fill:#e45756;"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1">
+      <path clip-path="url(#pa26c8a6660)" d="M 114.750313 190.88775 
+L 114.750313 19.02375 
+" style="fill:none;stroke:#e5e7eb;stroke-linecap:square;stroke-width:0.6;"/>
+     </g>
+     <g id="line2d_2">
+      <defs>
+       <path d="M 0 0 
+L 0 3.5 
+" id="m5c3e43f772" style="stroke:#000000;stroke-width:0.8;"/>
+      </defs>
+      <g>
+       <use style="stroke:#000000;stroke-width:0.8;" x="114.750313" xlink:href="#m5c3e43f772" y="190.88775"/>
+      </g>
+     </g>
+     <g id="text_1">
+      <text style="font-family:Arial;font-size:6px;font-style:normal;font-weight:normal;text-anchor:middle;" transform="rotate(-0, 114.750313, 202.182437)" x="114.750313" y="202.182437">0</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_3">
+      <path clip-path="url(#pa26c8a6660)" d="M 176.396027 190.88775 
+L 176.396027 19.02375 
+" style="fill:none;stroke:#e5e7eb;stroke-linecap:square;stroke-width:0.6;"/>
+     </g>
+     <g id="line2d_4">
+      <g>
+       <use style="stroke:#000000;stroke-width:0.8;" x="176.396027" xlink:href="#m5c3e43f772" y="190.88775"/>
+      </g>
+     </g>
+     <g id="text_2">
+      <text style="font-family:Arial;font-size:6px;font-style:normal;font-weight:normal;text-anchor:middle;" transform="rotate(-0, 176.396027, 202.182437)" x="176.396027" y="202.182437">20</text>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_5">
+      <path clip-path="url(#pa26c8a6660)" d="M 238.041741 190.88775 
+L 238.041741 19.02375 
+" style="fill:none;stroke:#e5e7eb;stroke-linecap:square;stroke-width:0.6;"/>
+     </g>
+     <g id="line2d_6">
+      <g>
+       <use style="stroke:#000000;stroke-width:0.8;" x="238.041741" xlink:href="#m5c3e43f772" y="190.88775"/>
+      </g>
+     </g>
+     <g id="text_3">
+      <text style="font-family:Arial;font-size:6px;font-style:normal;font-weight:normal;text-anchor:middle;" transform="rotate(-0, 238.041741, 202.182437)" x="238.041741" y="202.182437">40</text>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_7">
+      <path clip-path="url(#pa26c8a6660)" d="M 299.687455 190.88775 
+L 299.687455 19.02375 
+" style="fill:none;stroke:#e5e7eb;stroke-linecap:square;stroke-width:0.6;"/>
+     </g>
+     <g id="line2d_8">
+      <g>
+       <use style="stroke:#000000;stroke-width:0.8;" x="299.687455" xlink:href="#m5c3e43f772" y="190.88775"/>
+      </g>
+     </g>
+     <g id="text_4">
+      <text style="font-family:Arial;font-size:6px;font-style:normal;font-weight:normal;text-anchor:middle;" transform="rotate(-0, 299.687455, 202.182437)" x="299.687455" y="202.182437">60</text>
+     </g>
+    </g>
+    <g id="xtick_5">
+     <g id="line2d_9">
+      <path clip-path="url(#pa26c8a6660)" d="M 361.33317 190.88775 
+L 361.33317 19.02375 
+" style="fill:none;stroke:#e5e7eb;stroke-linecap:square;stroke-width:0.6;"/>
+     </g>
+     <g id="line2d_10">
+      <g>
+       <use style="stroke:#000000;stroke-width:0.8;" x="361.33317" xlink:href="#m5c3e43f772" y="190.88775"/>
+      </g>
+     </g>
+     <g id="text_5">
+      <text style="font-family:Arial;font-size:6px;font-style:normal;font-weight:normal;text-anchor:middle;" transform="rotate(-0, 361.33317, 202.182437)" x="361.33317" y="202.182437">80</text>
+     </g>
+    </g>
+    <g id="xtick_6">
+     <g id="line2d_11">
+      <path clip-path="url(#pa26c8a6660)" d="M 422.978884 190.88775 
+L 422.978884 19.02375 
+" style="fill:none;stroke:#e5e7eb;stroke-linecap:square;stroke-width:0.6;"/>
+     </g>
+     <g id="line2d_12">
+      <g>
+       <use style="stroke:#000000;stroke-width:0.8;" x="422.978884" xlink:href="#m5c3e43f772" y="190.88775"/>
+      </g>
+     </g>
+     <g id="text_6">
+      <text style="font-family:Arial;font-size:6px;font-style:normal;font-weight:normal;text-anchor:middle;" transform="rotate(-0, 422.978884, 202.182437)" x="422.978884" y="202.182437">100</text>
+     </g>
+    </g>
+    <g id="text_7">
+     <text style="font-family:Arial;font-size:7px;font-style:normal;font-weight:normal;text-anchor:middle;" transform="rotate(-0, 276.570312, 212.470719)" x="276.570312" y="212.470719">Percentage (%)</text>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_13">
+      <defs>
+       <path d="M 0 0 
+L -3.5 0 
+" id="mbacd8c3257" style="stroke:#000000;stroke-width:0.8;"/>
+      </defs>
+      <g>
+       <use style="stroke:#000000;stroke-width:0.8;" x="114.750313" xlink:href="#mbacd8c3257" y="177.438224"/>
+      </g>
+     </g>
+     <g id="text_8">
+      <text style="font-family:Arial;font-size:5.5px;font-style:normal;font-weight:normal;text-anchor:end;" transform="rotate(-0, 107.750313, 179.440138)" x="107.750313" y="179.440138">Multi-crop: Cashew - red rust</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_14">
+      <g>
+       <use style="stroke:#000000;stroke-width:0.8;" x="114.750313" xlink:href="#mbacd8c3257" y="161.331008"/>
+      </g>
+     </g>
+     <g id="text_9">
+      <text style="font-family:Arial;font-size:5.5px;font-style:normal;font-weight:normal;text-anchor:end;" transform="rotate(-0, 107.750313, 163.332922)" x="107.750313" y="163.332922">Multi-crop: Rice - bacterial leaf blight</text>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_15">
+      <g>
+       <use style="stroke:#000000;stroke-width:0.8;" x="114.750313" xlink:href="#mbacd8c3257" y="145.223791"/>
+      </g>
+     </g>
+     <g id="text_10">
+      <text style="font-family:Arial;font-size:5.5px;font-style:normal;font-weight:normal;text-anchor:end;" transform="rotate(-0, 107.750313, 147.225705)" x="107.750313" y="147.225705">Vegetable: Tomato - septoria leaf spot</text>
+     </g>
+    </g>
+    <g id="ytick_4">
+     <g id="line2d_16">
+      <g>
+       <use style="stroke:#000000;stroke-width:0.8;" x="114.750313" xlink:href="#mbacd8c3257" y="129.116575"/>
+      </g>
+     </g>
+     <g id="text_11">
+      <text style="font-family:Arial;font-size:5.5px;font-style:normal;font-weight:normal;text-anchor:end;" transform="rotate(-0, 107.750313, 131.118489)" x="107.750313" y="131.118489">Vegetable: Tomato - yellow leaf curl virus</text>
+     </g>
+    </g>
+    <g id="ytick_5">
+     <g id="line2d_17">
+      <g>
+       <use style="stroke:#000000;stroke-width:0.8;" x="114.750313" xlink:href="#mbacd8c3257" y="113.009358"/>
+      </g>
+     </g>
+     <g id="text_12">
+      <text style="font-family:Arial;font-size:5.5px;font-style:normal;font-weight:normal;text-anchor:end;" transform="rotate(-0, 107.750313, 115.011272)" x="107.750313" y="115.011272">Multi-crop: Tomato - septoria leaf spot</text>
+     </g>
+    </g>
+    <g id="ytick_6">
+     <g id="line2d_18">
+      <g>
+       <use style="stroke:#000000;stroke-width:0.8;" x="114.750313" xlink:href="#mbacd8c3257" y="96.902142"/>
+      </g>
+     </g>
+     <g id="text_13">
+      <text style="font-family:Arial;font-size:5.5px;font-style:normal;font-weight:normal;text-anchor:end;" transform="rotate(-0, 107.750313, 98.87054)" x="107.750313" y="98.87054">Vegetable: Tomato - late blight</text>
+     </g>
+    </g>
+    <g id="ytick_7">
+     <g id="line2d_19">
+      <g>
+       <use style="stroke:#000000;stroke-width:0.8;" x="114.750313" xlink:href="#mbacd8c3257" y="80.794925"/>
+      </g>
+     </g>
+     <g id="text_14">
+      <text style="font-family:Arial;font-size:5.5px;font-style:normal;font-weight:normal;text-anchor:end;" transform="rotate(-0, 107.750313, 82.796839)" x="107.750313" y="82.796839">Multi-crop: Corn - leaf blight</text>
+     </g>
+    </g>
+    <g id="ytick_8">
+     <g id="line2d_20">
+      <g>
+       <use style="stroke:#000000;stroke-width:0.8;" x="114.750313" xlink:href="#mbacd8c3257" y="64.687709"/>
+      </g>
+     </g>
+     <g id="text_15">
+      <text style="font-family:Arial;font-size:5.5px;font-style:normal;font-weight:normal;text-anchor:end;" transform="rotate(-0, 107.750313, 66.689623)" x="107.750313" y="66.689623">Multi-crop: Corn - streak virus</text>
+     </g>
+    </g>
+    <g id="ytick_9">
+     <g id="line2d_21">
+      <g>
+       <use style="stroke:#000000;stroke-width:0.8;" x="114.750313" xlink:href="#mbacd8c3257" y="48.580492"/>
+      </g>
+     </g>
+     <g id="text_16">
+      <text style="font-family:Arial;font-size:5.5px;font-style:normal;font-weight:normal;text-anchor:end;" transform="rotate(-0, 107.750313, 50.548891)" x="107.750313" y="50.548891">Multi-crop: Rice - brown spot</text>
+     </g>
+    </g>
+    <g id="ytick_10">
+     <g id="line2d_22">
+      <g>
+       <use style="stroke:#000000;stroke-width:0.8;" x="114.750313" xlink:href="#mbacd8c3257" y="32.473276"/>
+      </g>
+     </g>
+     <g id="text_17">
+      <text style="font-family:Arial;font-size:5.5px;font-style:normal;font-weight:normal;text-anchor:end;" transform="rotate(-0, 107.750313, 34.441674)" x="107.750313" y="34.441674">Multi-crop: Tomato - verticulium wilt</text>
+     </g>
+    </g>
+   </g>
+   <g id="patch_23">
+    <path d="M 114.750313 190.88775 
+L 114.750313 19.02375 
+" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-linejoin:miter;stroke-width:0.8;"/>
+   </g>
+   <g id="patch_24">
+    <path d="M 114.750313 190.88775 
+L 438.390312 190.88775 
+" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-linejoin:miter;stroke-width:0.8;"/>
+   </g>
+   <g id="text_18">
+    <text style="font-family:Arial;font-size:8px;font-style:normal;font-weight:normal;text-anchor:middle;" transform="rotate(-0, 276.570312, 13.02375)" x="276.570312" y="13.02375">Class-level weak points across five seeds</text>
+   </g>
+   <g id="legend_1">
+    <g id="patch_25">
+     <path d="M 392.313125 187.88775 
+L 434.190313 187.88775 
+Q 435.390313 187.88775 435.390313 186.68775 
+L 435.390313 169.575562 
+Q 435.390313 168.375563 434.190313 168.375563 
+L 392.313125 168.375563 
+Q 391.113125 168.375563 391.113125 169.575562 
+L 391.113125 186.68775 
+Q 391.113125 187.88775 392.313125 187.88775 
+z
+" style="fill:#ffffff;opacity:0.8;stroke:#cccccc;stroke-linejoin:miter;"/>
+    </g>
+    <g id="patch_26">
+     <path d="M 393.513125 175.07025 
+L 405.513125 175.07025 
+L 405.513125 170.87025 
+L 393.513125 170.87025 
+z
+" style="fill:#4c78a8;"/>
+    </g>
+    <g id="text_19">
+     <!-- acc$_{kept}$ -->
+     <g transform="translate(410.313125 175.07025)">
+      <text>
+       <tspan style="font-family:Arial;font-size:6px;font-style:regular;font-weight:regular;" x="0 3.336914 6.336914" y="-0.8125">acc</tspan>
+       <tspan style="font-family:DejaVu Sans;font-size:4.2px;font-style:oblique;font-weight:oblique;" x="9.394336 11.826562 14.410547 17.076562" y="0.171875">kept</tspan>
+      </text>
+     </g>
+    </g>
+    <g id="patch_27">
+     <path d="M 393.513125 184.224938 
+L 405.513125 184.224938 
+L 405.513125 180.024938 
+L 393.513125 180.024938 
+z
+" style="fill:#e45756;"/>
+    </g>
+    <g id="text_20">
+     <text style="font-family:Arial;font-size:6px;font-style:normal;font-weight:normal;text-anchor:start;" transform="rotate(-0, 410.313125, 184.224938)" x="410.313125" y="184.224938">rejection</text>
+    </g>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pa26c8a6660">
+   <rect height="171.864" width="323.64" x="114.750313" y="19.02375"/>
+  </clipPath>
+ </defs>
+</svg>

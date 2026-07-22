@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>DINOv2外部无监督基线补充报告</title>
+<style>
+body{font-family:Arial,'Microsoft YaHei',sans-serif;margin:28px;color:#1f2937;line-height:1.55}
+h1,h2{color:#111827}
+table{border-collapse:collapse;width:100%;font-size:13px;margin:12px 0 24px}
+th,td{border:1px solid #d1d5db;padding:7px 8px;text-align:right}
+th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}
+th{background:#f3f4f6}
+.note{background:#f8fafc;border-left:4px solid #64748b;padding:10px 14px;margin:14px 0}
+code{background:#f3f4f6;padding:1px 4px;border-radius:3px}
+</style>
+</head>
+<body>
+<h1>DINOv2外部无监督基线补充报告</h1>
+<div class="note">
+本补充实验采用传导式无监督聚类评价协议。真实标签不参与DINOv2特征提取、UMAP、聚类、Hungarian簇编号对齐或共识拒识，仅在结果固定后用于多对一事后类别对齐和外部聚类评价。
+</div>
+<h2>一、实验设置</h2>
+<p>数据集：F_new、V_new、完整11类M_new、预先整理9类M_new_drop5_drop7。所有数据采用SHA256去重图像；其中M_new在本补充脚本中执行同一SHA256去重流程。</p>
+<p>DINOv2模型：<code>timm vit_base_patch14_dinov2</code>公开自监督预训练权重，冻结特征提取器；输入尺寸固定为224×224，并使用ImageNet均值方差归一化。主簇数固定为K=20，随机种子为11、22、33、44、55。</p>
+<p>比较方法包括：DINOv2+KMeans全样本基线，以及DINOv2+UMAP100+KMeans/Birch/Agglomerative/any2/all3。注意：全样本结果和选择性拒识结果不能直接按同一准确率含义排名。</p>
+<h2>二、结果汇总</h2>
+<table>
+<thead><tr><th>数据集</th><th>方法</th><th>运行数</th><th>保留样本事后对齐聚类准确率</th><th>Coverage</th><th>保守全样本准确率</th><th>ARI_all</th><th>NMI_all</th><th>AMI_all</th><th>ARI_kept</th><th>NMI_kept</th><th>AMI_kept</th></tr></thead>
+<tbody>
+<tr><td>F_new</td><td>DINOv2+KMeans</td><td>5</td><td>98.78% ± 0.02%</td><td>100.00% ± 0.00%</td><td>98.78% ± 0.02%</td><td>0.365</td><td>0.756</td><td>0.755</td><td>0.365</td><td>0.756</td><td>0.755</td></tr><tr><td>F_new</td><td>DINOv2+UMAP+Agglomerative</td><td>5</td><td>99.83% ± 0.05%</td><td>100.00% ± 0.00%</td><td>99.83% ± 0.05%</td><td>0.393</td><td>0.779</td><td>0.778</td><td>0.393</td><td>0.779</td><td>0.778</td></tr><tr><td>F_new</td><td>DINOv2+UMAP+Birch</td><td>5</td><td>99.85% ± 0.04%</td><td>100.00% ± 0.00%</td><td>99.85% ± 0.04%</td><td>0.358</td><td>0.770</td><td>0.769</td><td>0.358</td><td>0.770</td><td>0.769</td></tr><tr><td>F_new</td><td>DINOv2+UMAP+KMeans</td><td>5</td><td>99.83% ± 0.05%</td><td>100.00% ± 0.00%</td><td>99.83% ± 0.05%</td><td>0.375</td><td>0.775</td><td>0.774</td><td>0.375</td><td>0.775</td><td>0.774</td></tr><tr><td>F_new</td><td>DINOv2+UMAP+all3</td><td>5</td><td>99.80% ± 0.06%</td><td>72.68% ± 2.74%</td><td>72.53% ± 2.73%</td><td>0.375</td><td>0.775</td><td>0.774</td><td>0.539</td><td>0.837</td><td>0.837</td></tr><tr><td>F_new</td><td>DINOv2+UMAP+any2</td><td>5</td><td>99.83% ± 0.05%</td><td>96.79% ± 2.06%</td><td>96.62% ± 2.06%</td><td>0.375</td><td>0.775</td><td>0.774</td><td>0.396</td><td>0.782</td><td>0.781</td></tr><tr><td>M_new</td><td>DINOv2+KMeans</td><td>5</td><td>70.91% ± 2.01%</td><td>100.00% ± 0.00%</td><td>70.91% ± 2.01%</td><td>0.379</td><td>0.664</td><td>0.661</td><td>0.379</td><td>0.664</td><td>0.661</td></tr><tr><td>M_new</td><td>DINOv2+UMAP+Agglomerative</td><td>5</td><td>77.36% ± 1.00%</td><td>100.00% ± 0.00%</td><td>77.36% ± 1.00%</td><td>0.482</td><td>0.727</td><td>0.725</td><td>0.482</td><td>0.727</td><td>0.725</td></tr><tr><td>M_new</td><td>DINOv2+UMAP+Birch</td><td>5</td><td>78.21% ± 0.89%</td><td>100.00% ± 0.00%</td><td>78.21% ± 0.89%</td><td>0.489</td><td>0.729</td><td>0.727</td><td>0.489</td><td>0.729</td><td>0.727</td></tr><tr><td>M_new</td><td>DINOv2+UMAP+KMeans</td><td>5</td><td>79.03% ± 1.60%</td><td>100.00% ± 0.00%</td><td>79.03% ± 1.60%</td><td>0.488</td><td>0.732</td><td>0.730</td><td>0.488</td><td>0.732</td><td>0.730</td></tr><tr><td>M_new</td><td>DINOv2+UMAP+all3</td><td>5</td><td>81.61% ± 2.79%</td><td>81.21% ± 3.95%</td><td>66.22% ± 2.54%</td><td>0.488</td><td>0.732</td><td>0.730</td><td>0.558</td><td>0.757</td><td>0.755</td></tr><tr><td>M_new</td><td>DINOv2+UMAP+any2</td><td>5</td><td>79.44% ± 1.48%</td><td>98.15% ± 1.53%</td><td>77.96% ± 0.91%</td><td>0.488</td><td>0.732</td><td>0.730</td><td>0.496</td><td>0.735</td><td>0.733</td></tr><tr><td>M_new_drop5_drop7</td><td>DINOv2+KMeans</td><td>5</td><td>79.05% ± 0.94%</td><td>100.00% ± 0.00%</td><td>79.05% ± 0.94%</td><td>0.415</td><td>0.686</td><td>0.684</td><td>0.415</td><td>0.686</td><td>0.684</td></tr><tr><td>M_new_drop5_drop7</td><td>DINOv2+UMAP+Agglomerative</td><td>5</td><td>83.82% ± 1.13%</td><td>100.00% ± 0.00%</td><td>83.82% ± 1.13%</td><td>0.497</td><td>0.735</td><td>0.733</td><td>0.497</td><td>0.735</td><td>0.733</td></tr><tr><td>M_new_drop5_drop7</td><td>DINOv2+UMAP+Birch</td><td>5</td><td>83.87% ± 2.29%</td><td>100.00% ± 0.00%</td><td>83.87% ± 2.29%</td><td>0.496</td><td>0.730</td><td>0.728</td><td>0.496</td><td>0.730</td><td>0.728</td></tr><tr><td>M_new_drop5_drop7</td><td>DINOv2+UMAP+KMeans</td><td>5</td><td>84.70% ± 0.56%</td><td>100.00% ± 0.00%</td><td>84.70% ± 0.56%</td><td>0.497</td><td>0.738</td><td>0.736</td><td>0.497</td><td>0.738</td><td>0.736</td></tr><tr><td>M_new_drop5_drop7</td><td>DINOv2+UMAP+all3</td><td>5</td><td>88.15% ± 0.73%</td><td>80.47% ± 3.38%</td><td>70.91% ± 2.39%</td><td>0.497</td><td>0.738</td><td>0.736</td><td>0.597</td><td>0.777</td><td>0.775</td></tr><tr><td>M_new_drop5_drop7</td><td>DINOv2+UMAP+any2</td><td>5</td><td>84.98% ± 0.61%</td><td>98.23% ± 1.35%</td><td>83.47% ± 0.69%</td><td>0.497</td><td>0.738</td><td>0.736</td><td>0.506</td><td>0.740</td><td>0.738</td></tr><tr><td>V_new</td><td>DINOv2+KMeans</td><td>5</td><td>82.56% ± 1.12%</td><td>100.00% ± 0.00%</td><td>82.56% ± 1.12%</td><td>0.385</td><td>0.692</td><td>0.692</td><td>0.385</td><td>0.692</td><td>0.692</td></tr><tr><td>V_new</td><td>DINOv2+UMAP+Agglomerative</td><td>5</td><td>89.69% ± 0.04%</td><td>100.00% ± 0.00%</td><td>89.69% ± 0.04%</td><td>0.646</td><td>0.836</td><td>0.836</td><td>0.646</td><td>0.836</td><td>0.836</td></tr><tr><td>V_new</td><td>DINOv2+UMAP+Birch</td><td>5</td><td>92.33% ± 2.46%</td><td>100.00% ± 0.00%</td><td>92.33% ± 2.46%</td><td>0.645</td><td>0.840</td><td>0.839</td><td>0.645</td><td>0.840</td><td>0.839</td></tr><tr><td>V_new</td><td>DINOv2+UMAP+KMeans</td><td>5</td><td>88.87% ± 4.01%</td><td>100.00% ± 0.00%</td><td>88.87% ± 4.01%</td><td>0.624</td><td>0.827</td><td>0.827</td><td>0.624</td><td>0.827</td><td>0.827</td></tr><tr><td>V_new</td><td>DINOv2+UMAP+all3</td><td>5</td><td>95.60% ± 0.55%</td><td>82.41% ± 6.79%</td><td>78.76% ± 6.15%</td><td>0.624</td><td>0.827</td><td>0.827</td><td>0.723</td><td>0.876</td><td>0.876</td></tr><tr><td>V_new</td><td>DINOv2+UMAP+any2</td><td>5</td><td>91.42% ± 2.87%</td><td>96.27% ± 3.28%</td><td>88.01% ± 4.07%</td><td>0.624</td><td>0.827</td><td>0.827</td><td>0.657</td><td>0.844</td><td>0.844</td></tr>
+</tbody>
+</table>
+<h2>三、文件</h2>
+<p>原始逐种子结果：<code>external_dinov2_results.csv</code>；均值±标准差汇总：<code>external_dinov2_summary.csv</code>；SHA256补充记录：<code>audit/exact_duplicate_groups_external.csv</code>。</p>
+<h2>四、SCAN复现状态</h2>
+<p>本轮未纳入SCAN数值结果。原因是服务器未发现既有SCAN复现代码，且SCAN需要独立的自监督预训练/邻域挖掘/聚类头训练流程；在没有完整可复现配置的情况下，不将其作为定量表格结果，以避免引入不可核查或不公平的基线。</p>
+</body>
+</html>
