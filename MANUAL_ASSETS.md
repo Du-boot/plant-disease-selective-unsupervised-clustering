@@ -21,15 +21,17 @@ models/
 
 The final SHA256-cleaned datasets used by the manuscript should be placed under `data/images_clean/`.
 
-| Dataset folder | Role in manuscript | Expected image count |
-|---|---|---:|
-| `F_new` | PlantVillage fruit disease subset | 13950 |
-| `V_new` | PlantVillage vegetable disease subset | 20214 |
-| `M_new` | complete 11-class multi-crop disease dataset | 4842 |
-| `M_new_drop5_drop7` | quality-control 9-class multi-crop disease subset | 4440 |
-| `G_new` | auxiliary cross-crop visual category dataset | 3730 |
+| Dataset folder | Role in manuscript | Expected image count | Original public source |
+|---|---|---:|---|
+| `F_new` | PlantVillage fruit disease subset | 13950 | https://github.com/spMohanty/PlantVillage-Dataset |
+| `V_new` | PlantVillage vegetable disease subset | 20214 | https://github.com/spMohanty/PlantVillage-Dataset |
+| `M_new` | complete 11-class multi-crop disease dataset | 4842 | https://data.mendeley.com/datasets/z6jp232g5j |
+| `M_new_drop5_drop7` | quality-control 9-class multi-crop disease subset | 4440 | https://data.mendeley.com/datasets/z6jp232g5j |
+| `G_new` | auxiliary cross-crop visual category dataset | 3730 | https://www.kaggle.com/datasets/truongdinhit/plant-leaf-disease-recognition-dataset |
 
 Use `data/images_clean_file_manifest_sha256.csv` to verify the expected file names and SHA256 values.
+
+The `G_new` folder was organized from the `Data for Leaf Disease/Background Removed` part of the Plant Leaf Disease Recognition Dataset. A related Mendeley metadata page is available at https://data.mendeley.com/datasets/5g238dv4ht.
 
 ## Model Checkpoints
 
@@ -39,6 +41,10 @@ Place the checkpoints under `models/`.
 |---|---|---|
 | `models/model.safetensors` | ConvNeXt-XLarge checkpoint used as frozen feature extractor | `72b257ce7a079089c1bac54151807caf1b10d33a570fa9738a3ba437d24fc4d9` |
 | `models/dinov2_vit_base_patch14_lvd142m.safetensors` | DINOv2 external-baseline checkpoint | `55cbb5d887b336d430e649c277b85a1429e724871f9d02ac16203235886d8c7b` |
+
+DINOv2 can be downloaded from https://huggingface.co/timm/vit_base_patch14_dinov2.lvd142m.
+
+The exact ConvNeXt checkpoint used by the frozen ConvNeXt experiments has not been publicly source-confirmed. For transparent reruns, use the checkpoint with the SHA256 hash above if available locally. A public timm ConvNeXt-XLarge ImageNet-22K checkpoint is available at https://huggingface.co/timm/convnext_xlarge.fb_in22k; using it may not exactly reproduce the frozen ConvNeXt numbers unless the weights match the recorded hash.
 
 ## Suggested Manual Distribution
 

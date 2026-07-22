@@ -40,6 +40,30 @@ results/                      Seed-level raw and summary experimental CSVs
 
 These files should be provided separately, for example by GitHub Releases, cloud drive, institutional repository, or local copy. Their required paths and checksums are listed in `MANUAL_ASSETS.md` and `WEIGHTS_AND_CHECKPOINTS.md`.
 
+## Public Download Sources
+
+The cleaned datasets in this project were reorganized from public plant-leaf image datasets. Download the original datasets from the sources below, then use the scripts and manifests in this repository to rebuild the flat folders expected by the experiments.
+
+| Local folder | Source dataset | Public download page |
+|---|---|---|
+| `F_new` | PlantVillage fruit disease subset | https://github.com/spMohanty/PlantVillage-Dataset |
+| `V_new` | PlantVillage vegetable disease subset | https://github.com/spMohanty/PlantVillage-Dataset |
+| `M_new` | Multi-Crop Leaf Disease Dataset: Corn, Potato, Rice, Tomato, and Cashew | https://data.mendeley.com/datasets/z6jp232g5j |
+| `M_new_drop5_drop7` | 9-class subset derived from `M_new` | https://data.mendeley.com/datasets/z6jp232g5j |
+| `G_new` | Plant Leaf Disease Recognition Dataset, `Data for Leaf Disease/Background Removed` | https://www.kaggle.com/datasets/truongdinhit/plant-leaf-disease-recognition-dataset |
+
+Additional metadata pages that may be useful:
+
+- PlantVillage in TensorFlow Datasets: https://www.tensorflow.org/datasets/catalog/plant_village
+- Plant Leaf Disease Recognition Dataset on Mendeley Data: https://data.mendeley.com/datasets/5g238dv4ht
+
+Model/checkpoint download notes:
+
+| File expected by scripts | Public source / status |
+|---|---|
+| `models/dinov2_vit_base_patch14_lvd142m.safetensors` | https://huggingface.co/timm/vit_base_patch14_dinov2.lvd142m |
+| `models/model.safetensors` | Exact local ConvNeXt checkpoint used in the frozen ConvNeXt experiments has not been publicly source-confirmed. A public ConvNeXt-XLarge ImageNet-22K timm checkpoint is available at https://huggingface.co/timm/convnext_xlarge.fb_in22k and the original Facebook download URL is recorded by timm as `https://dl.fbaipublicfiles.com/convnext/convnext_xlarge_22k_224.pth`. Results from the paper's frozen ConvNeXt run require the exact local checkpoint hash listed in `WEIGHTS_AND_CHECKPOINTS.md`. |
+
 ## Main Reports
 
 ```text
