@@ -1,0 +1,28 @@
+# Large/manual assets
+/data/images_clean/*
+!/data/images_clean/
+!/data/images_clean/README.md
+/models/*
+!/models/
+!/models/README.md
+
+# Raw/generated heavy artifacts
+/data/raw/
+/data/tmp/
+/outputs/
+**/__pycache__/
+*.pyc
+
+# Large feature and checkpoint caches
+*.npy
+*.npz
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+
+# Local OS/editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

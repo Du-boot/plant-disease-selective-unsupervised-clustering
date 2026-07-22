@@ -1,0 +1,28 @@
+stage,seconds,minutes,gpu_before,gpu_after,rss_mb_before,rss_mb_after
+ConvNeXt feature extraction,93.67863693647087,1.5613106156078478,"NVIDIA GeForce RTX 4090, 29, 24564
+NVIDIA GeForce RTX 4090, 12, 24564","NVIDIA GeForce RTX 4090, 3319, 24564
+NVIDIA GeForce RTX 4090, 15, 24564",NA: No module named 'psutil',NA: No module named 'psutil'
+UMAP 100D fitting and transform,23.667767059989274,0.39446278433315457,"NVIDIA GeForce RTX 4090, 3319, 24564
+NVIDIA GeForce RTX 4090, 15, 24564","NVIDIA GeForce RTX 4090, 3319, 24564
+NVIDIA GeForce RTX 4090, 15, 24564",NA: No module named 'psutil',NA: No module named 'psutil'
+KMeans clustering,0.7002485767006874,0.011670809611678124,"NVIDIA GeForce RTX 4090, 3319, 24564
+NVIDIA GeForce RTX 4090, 15, 24564","NVIDIA GeForce RTX 4090, 3319, 24564
+NVIDIA GeForce RTX 4090, 15, 24564",NA: No module named 'psutil',NA: No module named 'psutil'
+Birch clustering,0.5698046609759331,0.009496744349598884,"NVIDIA GeForce RTX 4090, 3319, 24564
+NVIDIA GeForce RTX 4090, 15, 24564","NVIDIA GeForce RTX 4090, 3319, 24564
+NVIDIA GeForce RTX 4090, 15, 24564",NA: No module named 'psutil',NA: No module named 'psutil'
+Agglomerative clustering,11.122479137033224,0.18537465228388708,"NVIDIA GeForce RTX 4090, 3319, 24564
+NVIDIA GeForce RTX 4090, 15, 24564","NVIDIA GeForce RTX 4090, 3319, 24564
+NVIDIA GeForce RTX 4090, 15, 24564",NA: No module named 'psutil',NA: No module named 'psutil'
+Hungarian cluster alignment,0.10641097463667393,0.0017735162439445654,"NVIDIA GeForce RTX 4090, 3319, 24564
+NVIDIA GeForce RTX 4090, 15, 24564","NVIDIA GeForce RTX 4090, 3319, 24564
+NVIDIA GeForce RTX 4090, 15, 24564",NA: No module named 'psutil',NA: No module named 'psutil'
+Consensus and rejection masks,0.04599978122860193,0.0007666630204766989,"NVIDIA GeForce RTX 4090, 3319, 24564
+NVIDIA GeForce RTX 4090, 15, 24564","NVIDIA GeForce RTX 4090, 3319, 24564
+NVIDIA GeForce RTX 4090, 15, 24564",NA: No module named 'psutil',NA: No module named 'psutil'
+Post-hoc mapping and evaluation,0.05108716432005167,0.0008514527386675278,"NVIDIA GeForce RTX 4090, 3319, 24564
+NVIDIA GeForce RTX 4090, 15, 24564","NVIDIA GeForce RTX 4090, 3319, 24564
+NVIDIA GeForce RTX 4090, 15, 24564",NA: No module named 'psutil',NA: No module named 'psutil'
+Total measured pipeline,129.9424342913553,2.1657072381892553,,"NVIDIA GeForce RTX 4090, 3319, 24564
+NVIDIA GeForce RTX 4090, 15, 24564",,NA: No module named 'psutil'
+Per-image ConvNeXt feature time,0.004634344362148554,7.72390727024759e-05,,,,

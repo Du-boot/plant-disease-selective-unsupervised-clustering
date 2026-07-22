@@ -1,0 +1,10 @@
+count,crop,display_name,label,old_label
+555,Cashew,Cashew - leaf miner,0,0
+566,Cashew,Cashew - red rust,1,1
+493,Corn,Corn - leaf blight,2,2
+401,Corn,Corn - streak virus,3,3
+390,Potato,Potato - fungi,4,4
+401,Rice,Rice - bacterial leaf blight,5,5
+370,Rice,Rice - brown spot,6,6
+720,Tomato,Tomato - septoria leaf spot,7,8
+673,Tomato,Tomato - verticulium wilt,8,9
