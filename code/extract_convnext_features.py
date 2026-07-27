@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """Extract frozen ConvNeXt features for the archived image datasets.
 
 The output layout matches the feature_root expected by
@@ -25,7 +25,17 @@ from torchvision import transforms
 
 
 IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
-DEFAULT_DATASETS = ["F_new", "V_new", "M_new_drop5_drop7", "G_new", "M_new"]
+
+# ===== V13 K=60 reproducibility defaults =====
+# Defaults are repository-relative so the GitHub archive can be rerun after the
+# Baidu Netdisk assets are unpacked into data/images_clean/ and models/.
+REPO_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_DATA_ROOT = Path(os.environ.get("PROTOCOLA_DATA_ROOT", str(REPO_ROOT / "data" / "images_clean")))
+DEFAULT_CHECKPOINT = Path(os.environ.get("PROTOCOLA_CONVNEXT_CHECKPOINT", str(REPO_ROOT / "models" / "model.safetensors")))
+DEFAULT_FEATURE_ROOT = Path(os.environ.get("PROTOCOLA_FEATURE_ROOT", str(REPO_ROOT / "outputs" / "convnext_features")))
+DEFAULT_DATASETS = ["F_new", "V_new", "M_new", "G_new"]
+DEFAULT_BATCH_SIZE = 32
+DEFAULT_SEED = 42
 
 
 def set_seed(seed: int = 42) -> None:
@@ -115,17 +125,24 @@ def extract_dataset(model, device: torch.device, dataset_root: Path, out_feat: P
 
 
 def main() -> None:
-    repo_root = Path(__file__).resolve().parents[1]
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data-root", type=Path, default=repo_root / "data" / "images_clean")
-    parser.add_argument("--checkpoint", type=Path, default=repo_root / "models" / "model.safetensors")
-    parser.add_argument("--feature-root", type=Path, default=repo_root / "outputs" / "convnext_feature_root")
+    parser.add_argument("--data-root", type=Path, default=DEFAULT_DATA_ROOT)
+    parser.add_argument("--checkpoint", type=Path, default=DEFAULT_CHECKPOINT)
+    parser.add_argument("--feature-root", type=Path, default=DEFAULT_FEATURE_ROOT)
     parser.add_argument("--datasets", nargs="+", default=DEFAULT_DATASETS)
-    parser.add_argument("--batch-size", type=int, default=32)
-    parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--batch-size", type=int, default=DEFAULT_BATCH_SIZE)
+    parser.add_argument("--seed", type=int, default=DEFAULT_SEED)
     args = parser.parse_args()
 
     set_seed(args.seed)
+    print("[config]", flush=True)
+    print(f"  data_root    = {args.data_root}", flush=True)
+    print(f"  checkpoint   = {args.checkpoint}", flush=True)
+    print(f"  feature_root = {args.feature_root}", flush=True)
+    print(f"  datasets     = {args.datasets}", flush=True)
+    print(f"  batch_size   = {args.batch_size}", flush=True)
+    print(f"  seed         = {args.seed}", flush=True)
+
     if not args.checkpoint.exists():
         raise FileNotFoundError(f"Missing checkpoint: {args.checkpoint}")
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -145,3 +162,6 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+

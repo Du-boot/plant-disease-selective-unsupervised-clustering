@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """Follow-up Protocol A experiments for the plant-leaf clustering study.
 
 This script intentionally keeps the evaluation protocol as post-hoc clustering
@@ -38,9 +38,20 @@ from sklearn.metrics import (
 )
 
 
-DATASETS = ["F_new", "V_new", "M_new_drop5_drop7", "G_new"]
+DATASETS = ["F_new", "V_new", "M_new", "G_new"]
 SEEDS = [11, 22, 33, 44, 55]
 IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
+
+# ===== V13 K=60 reproducibility defaults =====
+# Defaults are repository-relative so the GitHub archive can be rerun after the
+# Baidu Netdisk assets are unpacked into data/images_clean/ and models/.
+REPO_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_DATA_ROOT = Path(os.environ.get("PROTOCOLA_DATA_ROOT", str(REPO_ROOT / "data" / "images_clean")))
+DEFAULT_FEATURE_ROOT = Path(os.environ.get("PROTOCOLA_FEATURE_ROOT", str(REPO_ROOT / "outputs" / "convnext_features")))
+DEFAULT_OUT_ROOT = Path(os.environ.get("PROTOCOLA_FOLLOWUP_ROOT", str(REPO_ROOT / "outputs" / "protocolA_followup")))
+DEFAULT_SUBSET_N = 6000
+DEFAULT_PHASH_RADIUS = 8
+DEFAULT_STAGE = "all"
 
 
 def log(msg: str) -> None:
@@ -435,16 +446,19 @@ def run_followup(data_root: Path, feature_root: Path, out: Path, subset_n: int) 
     stability_rows: list[dict] = []
 
     param_trend_dims = [50, 100, 200]
-    param_trend_ks = [4, 6, 8, 10, 12, 15, 20, 25, 30]
-    param5 = [(50, 10), (50, 20), (100, 15), (100, 20), (100, 30), (200, 15), (200, 20)]
+    main_k = 60
+    # Keep the sensitivity layer lightweight for the K=60 rerun. The final
+    # configuration is still UMAP100 + K60; K20 remains as a legacy reference.
+    param_trend_ks = [20, 60]
+    param5 = [(50, 20), (100, 20), (100, 60), (200, 20)]
 
     for ds in DATASETS:
         X_full, y_full, _ = dataset_clean_view(data_root, feature_root, out, ds)
         log(f"dataset clean view: {ds}, n={len(y_full)}, classes={len(set(y_full.tolist()))}")
 
         for seed in SEEDS:
-            meta = {"dataset": ds, "subset": "exact_dedup_clean", "reduction": "umap", "dim": 100, "k": 20, "seed": seed}
-            Z, raw, packed = run_config(X_full, y_full, out, ds, "exact_dedup_clean", "umap", 100, 20, seed)
+            meta = {"dataset": ds, "subset": "exact_dedup_clean", "reduction": "umap", "dim": 100, "k": main_k, "seed": seed}
+            Z, raw, packed = run_config(X_full, y_full, out, ds, "exact_dedup_clean", "umap", 100, main_k, seed)
             rows, rnd, ints = evaluate_base_methods(Z, raw, packed["aligned"], packed["votes"], y_full, meta)
             base_rows.extend(rows)
             random_rows.extend(rnd)
@@ -455,8 +469,8 @@ def run_followup(data_root: Path, feature_root: Path, out: Path, subset_n: int) 
         X_sub, y_sub, subset_tag = make_fixed_subset(X_full, y_full, ds, subset_n)
         for seed in SEEDS:
             for reduction, dim in [("raw", 2048), ("pca", 100), ("umap", 100)]:
-                meta = {"dataset": ds, "subset": subset_tag, "reduction": reduction, "dim": dim, "k": 20, "seed": seed}
-                Z, raw, packed = run_config(X_sub, y_sub, out, ds, subset_tag, reduction, dim, 20, seed)
+                meta = {"dataset": ds, "subset": subset_tag, "reduction": reduction, "dim": dim, "k": main_k, "seed": seed}
+                Z, raw, packed = run_config(X_sub, y_sub, out, ds, subset_tag, reduction, dim, main_k, seed)
                 keep = np.all(packed["votes"] == packed["votes"][0:1], axis=0)
                 fair_rows.append(external_scores(y_sub, packed["aligned"]["kmeans"], keep, "all3", meta))
                 internal_rows.append(internal_scores(Z, packed["aligned"]["kmeans"], {**meta, "method": "all3"}))
@@ -510,14 +524,23 @@ def run_followup(data_root: Path, feature_root: Path, out: Path, subset_n: int) 
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--data-root", type=Path, default=Path("/data1/D"))
-    ap.add_argument("--feature-root", type=Path, default=Path("/data1/D/hostal/audit_unsupervised_20260720"))
-    ap.add_argument("--out", type=Path, default=Path("/data1/D/hostal/protocolA_followup_20260720"))
-    ap.add_argument("--subset-n", type=int, default=6000)
-    ap.add_argument("--phash-radius", type=int, default=8)
-    ap.add_argument("--stage", choices=["audit", "experiments", "all"], default="all")
+    ap.add_argument("--data-root", type=Path, default=DEFAULT_DATA_ROOT)
+    ap.add_argument("--feature-root", type=Path, default=DEFAULT_FEATURE_ROOT)
+    ap.add_argument("--out", type=Path, default=DEFAULT_OUT_ROOT)
+    ap.add_argument("--subset-n", type=int, default=DEFAULT_SUBSET_N)
+    ap.add_argument("--phash-radius", type=int, default=DEFAULT_PHASH_RADIUS)
+    ap.add_argument("--stage", choices=["audit", "experiments", "all"], default=DEFAULT_STAGE)
     args = ap.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
+    log("[config]")
+    log(f"  data_root    = {args.data_root}")
+    log(f"  feature_root = {args.feature_root}")
+    log(f"  out          = {args.out}")
+    log(f"  datasets     = {DATASETS}")
+    log(f"  seeds        = {SEEDS}")
+    log(f"  subset_n     = {args.subset_n}")
+    log(f"  phash_radius = {args.phash_radius}")
+    log(f"  stage        = {args.stage}")
     random.seed(20260720)
     np.random.seed(20260720)
     if args.stage in {"audit", "all"}:
@@ -528,3 +551,6 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+

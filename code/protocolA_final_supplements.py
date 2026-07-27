@@ -1,12 +1,11 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """Final supplements for Protocol A report.
 
 Outputs:
-- pHash<=4 human-audit contact sheets and blank judgement CSV.
+- pHash near-duplicate risk-audit contact sheets and blank judgement CSV.
 - class-level rejection tables and confusion matrices for exact-dedup main runs.
 - seed/bootstrap confidence intervals for method differences.
 - risk-coverage points.
-- optional M_new full-dataset main configuration experiment.
 """
 from __future__ import annotations
 
@@ -38,9 +37,19 @@ from sklearn.metrics import (
 )
 
 
-DATASETS = ["F_new", "V_new", "M_new_drop5_drop7", "G_new"]
+DATASETS = ["F_new", "V_new", "M_new", "G_new"]
 SEEDS = [11, 22, 33, 44, 55]
 IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
+
+# ===== V13 K=60 reproducibility defaults =====
+REPO_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_DATA_ROOT = Path(os.environ.get("PROTOCOLA_DATA_ROOT", str(REPO_ROOT / "data" / "images_clean")))
+DEFAULT_FEATURE_ROOT = Path(os.environ.get("PROTOCOLA_FEATURE_ROOT", str(REPO_ROOT / "outputs" / "convnext_features")))
+DEFAULT_FOLLOWUP_ROOT = Path(os.environ.get("PROTOCOLA_FOLLOWUP_ROOT", str(REPO_ROOT / "outputs" / "protocolA_followup")))
+DEFAULT_OUT_ROOT = Path(os.environ.get("PROTOCOLA_SUPPLEMENTS_ROOT", str(REPO_ROOT / "outputs" / "protocolA_final_supplements")))
+DEFAULT_CONVNEXT_CHECKPOINT = Path(os.environ.get("PROTOCOLA_CONVNEXT_CHECKPOINT", str(REPO_ROOT / "models" / "model.safetensors")))
+DEFAULT_STAGE = "analysis"
+
 DISPLAY_NAMES = {
     "F_new": {
         0: "Apple - apple scab",
@@ -67,17 +76,6 @@ DISPLAY_NAMES = {
         10: "Tomato - mosaic virus",
         11: "Tomato - yellow leaf curl virus",
     },
-    "M_new_drop5_drop7": {
-        0: "Cashew - leaf miner",
-        1: "Cashew - red rust",
-        2: "Corn - leaf blight",
-        3: "Corn - streak virus",
-        4: "Potato - fungi",
-        5: "Rice - bacterial leaf blight",
-        6: "Rice - brown spot",
-        7: "Tomato - septoria leaf spot",
-        8: "Tomato - verticulium wilt",
-    },
     "G_new": {
         0: "Gourd",
         1: "Hibiscus",
@@ -95,7 +93,7 @@ DISPLAY_NAMES = {
         7: "Rice - brown spot",
         8: "Rice - leaf blast",
         9: "Tomato - septoria leaf spot",
-        10: "Tomato - verticulium wilt",
+        10: "Tomato - Verticillium wilt",
     },
 }
 
@@ -195,7 +193,7 @@ def score_external(y: np.ndarray, clusters: np.ndarray, keep: np.ndarray, method
     }
 
 
-def fit_or_load_main(out_root: Path, X: np.ndarray, ds: str, seed: int, k: int = 20):
+def fit_or_load_main(out_root: Path, X: np.ndarray, ds: str, seed: int, k: int = 60):
     emb = out_root / "cache" / "embeddings" / f"{ds}__exact_dedup_clean__umap100__seed{seed}.npy"
     cl = out_root / "cache" / "clusters" / f"{ds}__exact_dedup_clean__umap100__k{k}__seed{seed}.npz"
     if not emb.exists() or not cl.exists():
@@ -215,7 +213,7 @@ def build_phash_audit(data_root: Path, followup_root: Path, out: Path, max_pairs
     rows = read_csv(followup_root / "duplicate_audit" / "near_duplicate_pairs.csv")
     rows = [r for r in rows if r.get("highly_suspicious") == "1"]
     audit_rows = []
-    img_out = out / "phash_manual_audit"
+    img_out = out / "phash_risk_audit"
     img_out.mkdir(parents=True, exist_ok=True)
     font = ImageFont.load_default()
     thumb = (150, 150)
@@ -239,7 +237,7 @@ def build_phash_audit(data_root: Path, followup_root: Path, out: Path, max_pairs
         for pi, page in enumerate(pages, 1):
             canvas = Image.new("RGB", (page_w, max(1, len(page)) * row_h + 40), "white")
             draw = ImageDraw.Draw(canvas)
-            draw.text((10, 10), f"{ds} pHash<=4 manual audit page {pi}/{len(pages)}", fill=(0, 0, 0), font=font)
+            draw.text((10, 10), f"{ds} pHash<=4 risk-audit page {pi}/{len(pages)}", fill=(0, 0, 0), font=font)
             for ri, r in enumerate(page):
                 y0 = 35 + ri * row_h
                 for side, fname, x0 in [("A", r["file_a"], 10), ("B", r["file_b"], 180)]:
@@ -254,9 +252,9 @@ def build_phash_audit(data_root: Path, followup_root: Path, out: Path, max_pairs
                 draw.text((360, y0), f"id: {ds}_{(pi - 1) * max_pairs_per_page + ri:04d}", fill=(0, 0, 0), font=font)
                 draw.text((360, y0 + 18), f"distance: {r['phash_hamming']}", fill=(0, 0, 0), font=font)
                 draw.text((360, y0 + 45), "judgement: same_resize | same_crop_rotate | burst_same_leaf | similar_not_duplicate", fill=(0, 0, 0), font=font)
-                draw.text((360, y0 + 70), "action: delete_b | keep_both | manual_check", fill=(0, 0, 0), font=font)
+                draw.text((360, y0 + 70), "risk note: possible_duplicate | visually_similar | uncertain", fill=(0, 0, 0), font=font)
             canvas.save(img_out / f"{ds}_phash_le4_page_{pi:02d}.jpg", quality=92)
-    write_csv(img_out / "phash_le4_manual_audit_todo.csv", audit_rows)
+    write_csv(img_out / "phash_le4_risk_audit_pairs.csv", audit_rows)
 
 
 def class_level_and_matrices(feature_root: Path, followup_root: Path, out: Path, seed: int = 11) -> None:
@@ -455,14 +453,14 @@ def fit_m_new_full(data_root: Path, feature_root: Path, out: Path, checkpoint: P
     write_csv(out / "m_new_full" / "M_new_exact_duplicate_groups.csv", exact_rows)
     rows = []
     for seed in SEEDS:
-        log(f"M_new full UMAP100 K20 seed {seed}")
+        log(f"M_new full UMAP100 K60 seed {seed}")
         import umap
         Z = umap.UMAP(n_components=100, n_neighbors=15, min_dist=0.1, metric="euclidean", random_state=seed).fit_transform(np.asarray(X))
-        km_model = KMeans(n_clusters=20, n_init=10, random_state=seed).fit(Z)
+        km_model = KMeans(n_clusters=60, n_init=10, random_state=seed).fit(Z)
         raw = {
             "kmeans": km_model.labels_,
-            "birch": Birch(threshold=0.11, branching_factor=25, n_clusters=20).fit_predict(Z),
-            "agg": AgglomerativeClustering(n_clusters=20, linkage="ward").fit_predict(Z),
+            "birch": Birch(threshold=0.11, branching_factor=25, n_clusters=60).fit_predict(Z),
+            "agg": AgglomerativeClustering(n_clusters=60, linkage="ward").fit_predict(Z),
         }
         aligned = {
             "kmeans": raw["kmeans"],
@@ -487,14 +485,21 @@ def fit_m_new_full(data_root: Path, feature_root: Path, out: Path, checkpoint: P
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--data-root", type=Path, default=Path("/data1/D"))
-    ap.add_argument("--feature-root", type=Path, default=Path("/data1/D/hostal/audit_unsupervised_20260720"))
-    ap.add_argument("--followup-root", type=Path, default=Path("/data1/D/hostal/protocolA_followup_20260720"))
-    ap.add_argument("--out", type=Path, default=Path("/data1/D/hostal/protocolA_final_supplements_20260720"))
-    ap.add_argument("--checkpoint", type=Path, default=Path("/data1/D/deploy/cn/model.safetensors"))
-    ap.add_argument("--stage", choices=["audit_assets", "analysis", "m_full", "all"], default="all")
+    ap.add_argument("--data-root", type=Path, default=DEFAULT_DATA_ROOT)
+    ap.add_argument("--feature-root", type=Path, default=DEFAULT_FEATURE_ROOT)
+    ap.add_argument("--followup-root", type=Path, default=DEFAULT_FOLLOWUP_ROOT)
+    ap.add_argument("--out", type=Path, default=DEFAULT_OUT_ROOT)
+    ap.add_argument("--checkpoint", type=Path, default=DEFAULT_CONVNEXT_CHECKPOINT)
+    ap.add_argument("--stage", choices=["audit_assets", "analysis", "m_full", "all"], default=DEFAULT_STAGE)
     args = ap.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
+    log("[config]")
+    log(f"  data_root     = {args.data_root}")
+    log(f"  feature_root  = {args.feature_root}")
+    log(f"  followup_root = {args.followup_root}")
+    log(f"  out           = {args.out}")
+    log(f"  checkpoint    = {args.checkpoint}")
+    log(f"  stage         = {args.stage}")
     if args.stage in {"audit_assets", "all"}:
         build_phash_audit(args.data_root, args.followup_root, args.out)
     if args.stage in {"analysis", "all"}:
@@ -509,3 +514,6 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+

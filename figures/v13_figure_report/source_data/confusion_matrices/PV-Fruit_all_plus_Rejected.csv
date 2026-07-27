@@ -1,0 +1,10 @@
+true_class,Apple - apple scab,Apple - black rot,Apple - cedar apple rust,Cherry - powdery mildew,Grape - esca black measles,Grape - leaf blight,Orange - citrus greening,Peach - bacterial spot,Strawberry - leaf scorch,Rejected
+Apple - apple scab,0.8701587301587301,0.005396825396825397,0.0015873015873015873,0.0,0.0,0.0,0.0,0.0,0.0,0.12285714285714286
+Apple - black rot,0.0,0.7272141706924315,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.2727858293075684
+Apple - cedar apple rust,0.0,0.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Cherry - powdery mildew,0.0,0.0,0.0,0.6855513307984791,0.0,0.0,0.0,0.0,0.0,0.3144486692015209
+Grape - esca black measles,0.0,0.0,0.0,0.0,0.6490238611713666,0.0,0.0,0.0,0.0,0.35097613882863343
+Grape - leaf blight,0.0,0.0,0.0,0.0,0.0,0.5271375464684015,0.0,0.0,0.0,0.4728624535315985
+Orange - citrus greening,0.0,0.0,0.0,0.0,0.0,0.0,0.5544216451788634,0.0,0.0,0.4455783548211367
+Peach - bacterial spot,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.5517631693513279,0.0,0.44823683064867215
+Strawberry - leaf scorch,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.6997294860234445,0.30027051397655546

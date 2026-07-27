@@ -1,44 +1,50 @@
 # Weights And Checkpoints
 
-## ConvNeXt Checkpoint
+The full checkpoint files are large and are provided in the same external asset
+package as the cleaned datasets:
 
-The main ConvNeXt experiments used a local external checkpoint:
+[Baidu Netdisk package](https://pan.baidu.com/s/1d8sLfgtz79Fjs-s7zvm2YQ?pwd=1234)
 
-```text
-/data1/D/deploy/cn/model.safetensors
-```
+Extraction code: `1234`
 
-It is included in this local reproducibility archive:
+Expected paths after unpacking:
 
 ```text
 models/model.safetensors
+models/dinov2_vit_base_patch14_lvd142m.safetensors
 ```
 
-It is approximately 1.5 GB, so it must be tracked with Git LFS when uploading to GitHub.
+## ConvNeXt Checkpoint
 
-Recorded server file information:
+The main manuscript pipeline uses:
+
+```text
+timm model name: convnext_xlarge_in22k
+checkpoint path: models/model.safetensors
+input size: 224 x 224
+feature output: 2048-D global pooled feature
+training in this study: none; all parameters frozen
+```
+
+This checkpoint corresponds to the public timm ConvNeXt-XLarge ImageNet-22K
+weight used as a frozen visual feature extractor.
+
+Recorded file information from the local reproducibility archive:
 
 ```text
 SHA256: 72b257ce7a079089c1bac54151807caf1b10d33a570fa9738a3ba437d24fc4d9
-Size:   approximately 1.5 GB
-Archive path: models/model.safetensors
-Server path:  /data1/D/deploy/cn/model.safetensors
+Size:   1,571,635,946 bytes
 ```
-
-Until the checkpoint source is fully confirmed, the manuscript should not claim that ConvNeXt is intrinsically superior to DINOv2. The safe wording is that the ConvNeXt local-checkpoint setting achieved higher results in these experiments, while DINOv2 provides a fully public self-supervised external baseline.
 
 ## DINOv2 Checkpoint
 
-The DINOv2 external baseline used:
+The external self-supervised baseline uses:
 
 ```text
-timm vit_base_patch14_dinov2
-```
-
-The public self-supervised DINOv2 checkpoint is included in this local reproducibility archive:
-
-```text
-models/dinov2_vit_base_patch14_lvd142m.safetensors
+timm model name: vit_base_patch14_dinov2
+checkpoint path: models/dinov2_vit_base_patch14_lvd142m.safetensors
+input size: 224 x 224
+training in this study: none; all parameters frozen
 ```
 
 Recorded file information:
@@ -49,9 +55,8 @@ Size:   346,334,872 bytes
 Source: HuggingFace/timm cache for timm/vit_base_patch14_dinov2.lvd142m
 ```
 
-The archived `code/external_dinov2_baselines.py` script loads this local checkpoint by default and resamples the absolute position embedding for 224 x 224 input.
-
-If the local checkpoint is absent, the model can also be downloaded by `timm`. On the original server, HuggingFace downloads used:
+If the local DINOv2 checkpoint is absent, `timm` can download the public model
+online. On the original server, HuggingFace downloads used:
 
 ```bash
 HF_ENDPOINT=https://hf-mirror.com

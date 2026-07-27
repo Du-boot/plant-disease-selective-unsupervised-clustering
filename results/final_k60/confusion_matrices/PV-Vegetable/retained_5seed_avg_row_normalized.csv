@@ -1,0 +1,13 @@
+true_class,Corn - common rust,Corn - northern leaf blight,Bell pepper - bacterial spot,Potato - early blight,Potato - late blight,Squash - powdery mildew,Tomato - bacterial spot,Tomato - late blight,Tomato - septoria leaf spot,Tomato - two-spotted spider mite,Tomato - mosaic virus,Tomato - yellow leaf curl virus
+Corn - common rust,0.9992922123073391,0.0007077876926609132,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Corn - northern leaf blight,0.002303482629941482,0.9976965173700585,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Bell pepper - bacterial spot,0.0,0.0,0.9953106822196685,0.0,0.0,0.0,0.0,0.0,0.0046893177803314905,0.0,0.0,0.0
+Potato - early blight,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Potato - late blight,0.0,0.0,0.0,0.0,0.9925343038978746,0.0,0.0,0.0074656961021255745,0.0,0.0,0.0,0.0
+Squash - powdery mildew,0.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0
+Tomato - bacterial spot,0.0,0.0,0.0,0.0,0.0,0.0,0.9950322533863336,0.0049677466136666135,0.0,0.0,0.0,0.0
+Tomato - late blight,0.0,0.0,0.0,0.00013404825737265417,0.0,0.0,0.0011831119185629541,0.9980087074816286,0.0,0.0,0.0,0.0006741323424358949
+Tomato - septoria leaf spot,0.0,0.0,0.0,0.002026856850904376,0.0,0.0,0.003138641771058004,0.0,0.9907864736904731,0.004048027687564626,0.0,0.0
+Tomato - two-spotted spider mite,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.99963440439344,0.0,0.00036559560656002744
+Tomato - mosaic virus,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.0,0.0
+Tomato - yellow leaf curl virus,0.0,0.0,0.0,0.0,0.0,0.0,0.027943735588084384,0.0,0.0,0.0022217429344946853,0.0,0.9698345214774209

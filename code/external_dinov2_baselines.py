@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """External DINOv2 baselines for Protocol A.
 
 This script follows the same transductive post-hoc clustering evaluation
@@ -12,6 +12,7 @@ import csv
 import hashlib
 import json
 import math
+import os
 import time
 from collections import Counter
 from pathlib import Path
@@ -34,10 +35,17 @@ from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
 
 
-DATASETS = ["F_new", "V_new", "M_new", "M_new_drop5_drop7"]
+DATASETS = ["F_new", "V_new", "M_new", "G_new"]
 SEEDS = [11, 22, 33, 44, 55]
-K = 20
+K = 60
 IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_DATA_ROOT = Path(os.environ.get("PROTOCOLA_DATA_ROOT", str(REPO_ROOT / "data" / "images_clean")))
+DEFAULT_OUT_ROOT = Path(os.environ.get("PROTOCOLA_DINOV2_ROOT", str(REPO_ROOT / "outputs" / "external_baselines_dinov2")))
+DEFAULT_AUDIT_JSON = Path(os.environ.get("PROTOCOLA_AUDIT_JSON", str(REPO_ROOT / "outputs" / "protocolA_followup" / "duplicate_audit" / "exact_clean_keep_names.json")))
+DEFAULT_DINOV2_CHECKPOINT = Path(os.environ.get("PROTOCOLA_DINOV2_CHECKPOINT", str(REPO_ROOT / "models" / "dinov2_vit_base_patch14_lvd142m.safetensors")))
+DEFAULT_CONVNEXT_MAIN_CSV = Path(os.environ.get("PROTOCOLA_CONVNEXT_MAIN_CSV", str(REPO_ROOT / "outputs" / "protocolA_followup" / "followup_results" / "clean_main.csv")))
 
 
 def log(msg: str) -> None:
@@ -51,6 +59,20 @@ def write_csv(path: Path, rows: list[dict]) -> None:
         writer = csv.DictWriter(f, fieldnames=keys, extrasaction="ignore")
         writer.writeheader()
         writer.writerows(rows)
+
+
+def read_csv(path: Path) -> list[dict]:
+    if not path.exists():
+        return []
+    with path.open(encoding="utf-8-sig", newline="") as f:
+        return list(csv.DictReader(f))
+
+
+def as_float(value: object) -> float:
+    try:
+        return float(value)  # type: ignore[arg-type]
+    except (TypeError, ValueError):
+        return math.nan
 
 
 def image_files(root: Path) -> list[Path]:
@@ -346,8 +368,124 @@ def summarize(result_csv: Path, summary_csv: Path) -> None:
     write_csv(summary_csv, out)
 
 
+def summarize_values(values: list[float]) -> tuple[float, float]:
+    arr = np.asarray([v for v in values if math.isfinite(v)], dtype=float)
+    if arr.size == 0:
+        return math.nan, math.nan
+    sd = float(np.nanstd(arr, ddof=1)) if arr.size > 1 else 0.0
+    return float(np.nanmean(arr)), sd
+
+
+def build_convnext_vs_dinov2_key(out_root: Path, convnext_csv: Path) -> None:
+    """Create the compact Fig08 source table from real seed-level outputs."""
+    rows = read_csv(out_root / "external_dinov2_results.csv")
+    key_rows: list[dict] = []
+
+    def append_group(dataset: str, method: str, items: list[dict], source: str) -> None:
+        if not items:
+            return
+        acc_m, acc_sd = summarize_values([as_float(r.get("acc_kept")) for r in items])
+        cov_m, cov_sd = summarize_values([
+            as_float(r.get("coverage")) if "coverage" in r else 1.0 - as_float(r.get("rejection_rate"))
+            for r in items
+        ])
+        overall_m, overall_sd = summarize_values([
+            as_float(r.get("conservative_overall_accuracy"))
+            if "conservative_overall_accuracy" in r
+            else as_float(r.get("overall_accuracy"))
+            for r in items
+        ])
+        key_rows.append({
+            "dataset": dataset,
+            "method": method,
+            "source": source,
+            "n_seeds": len({r.get("seed") for r in items}),
+            "acc_kept_mean": acc_m,
+            "acc_kept_sd": acc_sd,
+            "coverage_mean": cov_m,
+            "coverage_sd": cov_sd,
+            "conservative_overall_accuracy_mean": overall_m,
+            "conservative_overall_accuracy_sd": overall_sd,
+        })
+
+    for ds in DATASETS:
+        for method in ["DINOv2+KMeans", "DINOv2+UMAP+all3"]:
+            append_group(
+                ds,
+                method,
+                [r for r in rows if r.get("dataset") == ds and r.get("method") == method],
+                "external_dinov2_results.csv",
+            )
+
+    convnext_rows = read_csv(convnext_csv)
+    for ds in DATASETS:
+        items = [
+            r for r in convnext_rows
+            if r.get("dataset") == ds
+            and r.get("method") == "all3"
+            and r.get("reduction") == "umap"
+            and str(r.get("dim")) == "100"
+            and str(r.get("k")) == "20"
+        ]
+        append_group(ds, "ConvNeXt+UMAP+all3", items, str(convnext_csv))
+
+    write_csv(out_root / "summary_convnext_vs_dinov2_key.csv", key_rows)
+
+
+def dinov2_seedlevel_bootstrap(out_root: Path, reps: int = 20000) -> None:
+    """Paired seed bootstrap within the DINOv2 backbone."""
+    rows = read_csv(out_root / "external_dinov2_results.csv")
+    rng = np.random.RandomState(20260723)
+    metrics = ["acc_kept", "ari_kept", "nmi_kept", "coverage"]
+    comparisons = [
+        ("DINOv2+UMAP+all3", "DINOv2+UMAP+KMeans"),
+        ("DINOv2+UMAP+all3", "DINOv2+UMAP+any2"),
+    ]
+    out_rows: list[dict] = []
+    for ds in DATASETS:
+        for left_method, right_method in comparisons:
+            for metric in metrics:
+                left = {
+                    int(r["seed"]): as_float(r.get(metric))
+                    for r in rows
+                    if r.get("dataset") == ds
+                    and r.get("method") == left_method
+                    and math.isfinite(as_float(r.get(metric)))
+                }
+                right = {
+                    int(r["seed"]): as_float(r.get(metric))
+                    for r in rows
+                    if r.get("dataset") == ds
+                    and r.get("method") == right_method
+                    and math.isfinite(as_float(r.get(metric)))
+                }
+                seeds = sorted(set(left) & set(right))
+                if not seeds:
+                    continue
+                diffs = np.asarray([left[s] - right[s] for s in seeds], dtype=float)
+                boots = np.asarray([np.mean(diffs[rng.randint(0, len(diffs), len(diffs))]) for _ in range(reps)])
+                lo, hi = np.percentile(boots, [2.5, 97.5])
+                out_rows.append({
+                    "dataset": ds,
+                    "comparison": f"{left_method} - {right_method}",
+                    "metric": metric,
+                    "sampling_unit": "random_seed",
+                    "n_seed_pairs": len(seeds),
+                    "bootstrap_reps": reps,
+                    "ci_method": "percentile",
+                    "mean_diff": float(np.mean(diffs)),
+                    "seed_diff_std": float(np.std(diffs, ddof=1)) if len(diffs) > 1 else 0.0,
+                    "ci95_low": float(lo),
+                    "ci95_high": float(hi),
+                    "ci_excludes_zero": int(lo > 0 or hi < 0),
+                    "seed_diffs": ";".join(f"{x:.8f}" for x in diffs),
+                })
+    write_csv(out_root / "bootstrap_seedlevel_dinov2" / "dinov2_seedlevel_paired_bootstrap_ci.csv", out_rows)
+
+
 def build_html(out_root: Path) -> None:
-    summary = list(csv.DictReader((out_root / "external_dinov2_summary.csv").open(encoding="utf-8")))
+    """Build a readable UTF-8 Chinese report."""
+    summary = read_csv(out_root / "external_dinov2_summary.csv")
 
     def pct(x: str) -> str:
         return f"{float(x) * 100:.2f}%"
@@ -367,7 +505,7 @@ def build_html(out_root: Path) -> None:
             f"<td>{num(r['ari_kept_mean'])}</td><td>{num(r['nmi_kept_mean'])}</td><td>{num(r['ami_kept_mean'])}</td>"
             "</tr>"
         )
-    html = f"""<!doctype html>
+    html_text = f"""<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
@@ -386,12 +524,12 @@ code{{background:#f3f4f6;padding:1px 4px;border-radius:3px}}
 <body>
 <h1>DINOv2外部无监督基线补充报告</h1>
 <div class="note">
-本补充实验采用传导式无监督聚类评价协议。真实标签不参与DINOv2特征提取、UMAP、聚类、Hungarian簇编号对齐或共识拒识，仅在结果固定后用于多对一事后类别对齐和外部聚类评价。
+本补充实验采用传导式无监督聚类评价协议。真实标签不参与 DINOv2 特征提取、UMAP、聚类、Hungarian 簇编号对齐或共识拒识，仅在结果固定后用于多对一事后类别对齐和外部聚类评价。
 </div>
 <h2>一、实验设置</h2>
-<p>数据集：F_new、V_new、完整11类M_new、预先整理9类M_new_drop5_drop7。所有数据采用SHA256去重图像；其中M_new在本补充脚本中执行同一SHA256去重流程。</p>
-<p>DINOv2模型：<code>timm vit_base_patch14_dinov2</code>公开自监督预训练权重，冻结特征提取器；输入尺寸固定为224×224，并使用ImageNet均值方差归一化。主簇数固定为K=20，随机种子为11、22、33、44、55。</p>
-<p>比较方法包括：DINOv2+KMeans全样本基线，以及DINOv2+UMAP100+KMeans/Birch/Agglomerative/any2/all3。注意：全样本结果和选择性拒识结果不能直接按同一准确率含义排名。</p>
+<p>数据集：F_new、V_new、完整 11 类 M_new 和 G_new。所有数据均采用 SHA256 字节级完全重复删除后的图像；pHash 仅作近重复风险审计。</p>
+<p>DINOv2 模型：<code>timm vit_base_patch14_dinov2</code> 公开自监督预训练权重或等价本地 safetensors 检查点，冻结特征提取器；输入尺寸固定为 224x224，并使用 ImageNet 均值方差归一化。主簇数固定为 K=60，随机种子为 11、22、33、44、55。</p>
+<p>比较方法包括：DINOv2+KMeans 全样本基线，以及 DINOv2+UMAP100+KMeans/Birch/Agglomerative/any2/all3。全样本结果和选择性拒识结果不能按同一准确率含义直接排名。</p>
 <h2>二、结果汇总</h2>
 <table>
 <thead><tr><th>数据集</th><th>方法</th><th>运行数</th><th>保留样本事后对齐聚类准确率</th><th>Coverage</th><th>保守全样本准确率</th><th>ARI_all</th><th>NMI_all</th><th>AMI_all</th><th>ARI_kept</th><th>NMI_kept</th><th>AMI_kept</th></tr></thead>
@@ -400,24 +538,24 @@ code{{background:#f3f4f6;padding:1px 4px;border-radius:3px}}
 </tbody>
 </table>
 <h2>三、文件</h2>
-<p>原始逐种子结果：<code>external_dinov2_results.csv</code>；均值±标准差汇总：<code>external_dinov2_summary.csv</code>；SHA256补充记录：<code>audit/exact_duplicate_groups_external.csv</code>。</p>
+<p>逐 seed 原始结果：<code>external_dinov2_results.csv</code>；均值和标准差：<code>external_dinov2_summary.csv</code>；Fig08 汇总表：<code>summary_convnext_vs_dinov2_key.csv</code>；DINOv2 骨干内 paired bootstrap：<code>bootstrap_seedlevel_dinov2/dinov2_seedlevel_paired_bootstrap_ci.csv</code>。</p>
 <h2>四、SCAN复现状态</h2>
-<p>本轮未纳入SCAN数值结果。原因是服务器未发现既有SCAN复现代码，且SCAN需要独立的自监督预训练/邻域挖掘/聚类头训练流程；在没有完整可复现配置的情况下，不将其作为定量表格结果，以避免引入不可核查或不公平的基线。</p>
+<p>本轮未纳入 SCAN 数值结果。原因是 SCAN 需要独立的自监督预训练、邻域挖掘和聚类头训练流程；在没有完整可复现配置的情况下，不将其作为定量表格结果，以避免引入不可核查或不公平的基线。</p>
 </body>
 </html>
 """
     report = out_root / "web_report_external_dinov2" / "index.html"
     report.parent.mkdir(parents=True, exist_ok=True)
-    report.write_text(html, encoding="utf-8")
+    report.write_text(html_text, encoding="utf-8")
 
 
 def main() -> None:
-    repo_root = Path(__file__).resolve().parents[1]
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data-root", type=Path, default=repo_root / "data" / "images_clean")
-    parser.add_argument("--out", type=Path, default=repo_root / "outputs" / "external_baselines_dinov2")
-    parser.add_argument("--audit-json", type=Path, default=repo_root / "data_audit" / "duplicate_audit" / "exact_clean_keep_names.json")
-    parser.add_argument("--dinov2-checkpoint", type=Path, default=repo_root / "models" / "dinov2_vit_base_patch14_lvd142m.safetensors")
+    parser.add_argument("--data-root", type=Path, default=DEFAULT_DATA_ROOT)
+    parser.add_argument("--out", type=Path, default=DEFAULT_OUT_ROOT)
+    parser.add_argument("--audit-json", type=Path, default=DEFAULT_AUDIT_JSON)
+    parser.add_argument("--dinov2-checkpoint", type=Path, default=DEFAULT_DINOV2_CHECKPOINT)
+    parser.add_argument("--convnext-main-csv", type=Path, default=DEFAULT_CONVNEXT_MAIN_CSV)
     parser.add_argument("--batch-size", type=int, default=96)
     args = parser.parse_args()
 
@@ -427,9 +565,14 @@ def main() -> None:
     keep = build_keep_names(data_root, audit_json, out_root)
     extract_dinov2_features(data_root, out_root, keep, batch_size=args.batch_size, checkpoint=args.dinov2_checkpoint)
     run_clustering(out_root)
+    build_convnext_vs_dinov2_key(out_root, args.convnext_main_csv)
+    dinov2_seedlevel_bootstrap(out_root)
     build_html(out_root)
     log(f"done: {out_root}")
 
 
 if __name__ == "__main__":
     main()
+
+
+

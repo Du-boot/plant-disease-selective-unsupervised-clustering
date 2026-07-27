@@ -1,64 +1,82 @@
 # Plant Disease Selective Unsupervised Clustering
 
-This repository archives the code, audit lists, seed-level results, reports, and figure scripts used for the manuscript:
+This repository archives the reproducibility code, SHA256 de-duplication records,
+seed-level results, confusion-matrix source files, and manuscript figure scripts
+for the plant-disease selective unsupervised clustering manuscript.
 
-`植物病害选择性无监督聚类_中文论文完善稿_V10_数据许可与权重溯源确认版.docx`
+The frozen final experiment version is **V13 / finally3**:
 
-The experiments follow Protocol A: transductive selective unsupervised clustering. Disease labels are not used during feature extraction, dimensionality reduction, clustering, cross-algorithm cluster alignment, or rejection. Labels are used only after the clustering/rejection outputs are fixed, for many-to-one post-hoc label alignment and external evaluation.
+- Protocol: transductive selective unsupervised clustering.
+- Backbone: frozen ConvNeXt-XLarge feature extractor.
+- UMAP: `n_components=100`, `n_neighbors=15`, `min_dist=0.1`, `metric=euclidean`.
+- Clustering: `K=60`.
+- Seeds: `11, 22, 33, 44, 55`.
+- Final datasets: `F_new`, `V_new`, complete `M_new` (MCLD-11), and `G_new`.
+
+Disease labels are not used during feature extraction, dimensionality reduction,
+clustering, cross-algorithm cluster alignment, or rejection. Labels are used only
+after all clustering and rejection outputs are fixed, for many-to-one post-hoc
+alignment and external clustering evaluation.
 
 ## Repository Layout
 
 ```text
-code/                         Reproducibility scripts
-code/legacy_original_deploy/  Original deploy scripts and dataset-building helpers
-data_audit/                   SHA256 exact-duplicate lists, pHash audit CSVs, label maps
-data/images_clean/            SHA256-cleaned image datasets used by the manuscript
-docs/                         Method parameters, dataset notes, manuscript draft notes
-external_baselines/dinov2/    DINOv2 external-baseline seed results and reports
-figures/                      Manuscript figure outputs and figure scripts
-manuscript/                   Current manuscript DOCX copy
-models/                       ConvNeXt and DINOv2 checkpoints required for reproduction
-outputs/                      Placeholder for newly generated outputs; not tracked
-reports/                      Final HTML report and final summary tables
-results/                      Seed-level raw and summary experimental CSVs
-data/                         Placeholder for datasets; not tracked
+code/                         V13/K60 reproduction scripts
+code/legacy_k20_v12/          Historical K=20/MCLD-9 report scripts, not final
+code/legacy_original_deploy/  Earlier deployment helpers retained for audit
+data/                         Dataset manifests and expected clean-data layout
+data_audit/                   SHA256 exact-duplicate and pHash risk-audit files
+docs/                         Method notes and manuscript supporting notes
+external_baselines/dinov2/    DINOv2 baseline summaries and reports
+figures/v13_figure_report/    V13 figure source data and PNG/PDF figures
+models/                       Expected local checkpoint paths
+results/final_k60/            Final K=60 seed-level CSVs and matrix source files
+outputs/                      Default location for newly generated outputs
 ```
 
-## What Is Included
+## Large Assets
 
-- All Protocol A Python scripts used for duplicate auditing, main experiments, final analyses, reports, and figures.
-- Original deploy scripts used earlier in the project, including `encode.py`, `get_final_result.py`, and `make_confusion_m.py`.
-- SHA256 exact-duplicate removal lists and pHash near-duplicate risk-audit files.
-- Random-seed-level results for the main ConvNeXt pipeline.
-- DINOv2 external-baseline seed-level results, summaries, and seed-level paired bootstrap confidence intervals.
-- Final manuscript figures and HTML reports.
+The cleaned images and model weights are large. They are provided separately in
+the shared reproducibility package:
 
-## What Is Not Included
+[Baidu Netdisk package](https://pan.baidu.com/s/1d8sLfgtz79Fjs-s7zvm2YQ?pwd=1234)
 
-The local archive now includes the SHA256-cleaned image datasets under `data/images_clean/`, the ConvNeXt checkpoint under `models/model.safetensors`, and the DINOv2 checkpoint under `models/dinov2_vit_base_patch14_lvd142m.safetensors`, so the manuscript experiments can be rerun from images.
+Extraction code: `1234`
 
-Because the clean images and checkpoint are several GB in total, this repository includes `.gitattributes` rules for Git LFS. Before uploading to GitHub, run `git lfs install`.
-
-## Main Results To Cite
-
-The frozen final report is:
+After downloading, place or keep the assets at:
 
 ```text
-reports/protocolA_final_submission_v3/index.html
+data/images_clean/F_new/
+data/images_clean/V_new/
+data/images_clean/M_new/
+data/images_clean/G_new/
+models/model.safetensors
+models/dinov2_vit_base_patch14_lvd142m.safetensors
 ```
 
-The DINOv2 external-baseline report is:
+`models/model.safetensors` corresponds to the public timm
+`convnext_xlarge_in22k` ConvNeXt-XLarge ImageNet-22K checkpoint used as a frozen
+2048-D feature extractor. DINOv2 uses the public
+`vit_base_patch14_dinov2.lvd142m` checkpoint.
+
+## Final Results
+
+The final archived tables are in `results/final_k60/`:
 
 ```text
-external_baselines/dinov2/reports/web_report_external_baselines_summary/index.html
+main_results.csv
+ablation_results.csv
+all_vs_retained_metrics.csv
+bootstrap_results.csv
+classwise_results.csv
+runtime_results.csv
+confusion_matrices/
 ```
 
-The DINOv2 seed-level paired bootstrap report is:
+The final manuscript figures for quick inspection are in:
 
 ```text
-external_baselines/dinov2/bootstrap_seedlevel/index.html
+figures/v13_figure_report/reproduced_figures/
 ```
 
-## Reproducibility
-
-For commands and expected paths, see `REPRODUCE.md`.
+For exact rerun commands and manuscript mapping, see `REPRODUCE.md`.

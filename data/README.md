@@ -1,15 +1,14 @@
-# Data Placeholder
+# Data Layout
 
-The `images_clean/` folder stores the SHA256-cleaned image datasets used by the manuscript experiments.
-
-Default scripts expect the original server layout under `/data1/D/`. For local reproduction, either copy or symlink:
+Download the large cleaned-image asset package linked in `../DATA_AVAILABILITY.md`
+and place the final V13 folders here:
 
 ```text
-data/images_clean/F_new              -> /data1/D/F_new
-data/images_clean/V_new              -> /data1/D/V_new
-data/images_clean/G_new              -> /data1/D/G_new
-data/images_clean/M_new              -> /data1/D/M_new
-data/images_clean/M_new_drop5_drop7  -> /data1/D/M_new_drop5_drop7
+data/images_clean/F_new/
+data/images_clean/V_new/
+data/images_clean/M_new/
+data/images_clean/G_new/
 ```
 
-See `../DATA_AVAILABILITY.md`.
+The final reproduction scripts use these repository-relative paths by default.
+The historical `M_new_drop5_drop7` subset is not used for final V13 results.

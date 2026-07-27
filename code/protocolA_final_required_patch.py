@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """Required final-analysis patch for Protocol A experiments.
 
 This script does not change the clustering protocol. It only adds the pieces
@@ -8,8 +8,10 @@ needed for manuscript reporting:
 - seed-level paired bootstrap confidence intervals;
 - average row-normalized confusion matrices over five seeds;
 - a discrete risk-coverage table with explicit wording;
-- a pHash connected-component cleanup template for manual audit results;
-- a short M-cleaning note grounded in the available label_map.
+
+The current final manuscript protocol uses complete M_new (MCLD-11). pHash is
+treated only as a near-duplicate risk audit and is not used for automatic
+deletion or rerunning experiments.
 """
 from __future__ import annotations
 
@@ -17,6 +19,7 @@ import argparse
 import csv
 import json
 import math
+import os
 import textwrap
 from collections import Counter, defaultdict, deque
 from pathlib import Path
@@ -35,6 +38,12 @@ from protocolA_final_supplements import (
     write_csv,
     write_matrix_csv,
 )
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_DATA_ROOT = Path(os.environ.get("PROTOCOLA_DATA_ROOT", str(REPO_ROOT / "data" / "images_clean")))
+DEFAULT_FEATURE_ROOT = Path(os.environ.get("PROTOCOLA_FEATURE_ROOT", str(REPO_ROOT / "outputs" / "convnext_features")))
+DEFAULT_FOLLOWUP_ROOT = Path(os.environ.get("PROTOCOLA_FOLLOWUP_ROOT", str(REPO_ROOT / "outputs" / "protocolA_followup")))
+DEFAULT_OUT_ROOT = Path(os.environ.get("PROTOCOLA_REQUIRED_ROOT", str(REPO_ROOT / "outputs" / "protocolA_final_required_patch")))
 
 
 def pct(x: float) -> str:
@@ -239,191 +248,22 @@ def discrete_risk_coverage(followup_root: Path, out: Path) -> None:
     write_csv(out / "risk_coverage_discrete" / "risk_coverage_discrete_operating_points.csv", rows)
 
 
-def m_cleaning_note(data_root: Path, out: Path) -> None:
-    out_dir = out / "m_cleaning_note"
-    out_dir.mkdir(parents=True, exist_ok=True)
-    label_map = data_root / "M_new_drop5_drop7" / "label_map.csv"
-    retained = []
-    if label_map.exists():
-        with label_map.open(encoding="utf-8-sig", newline="") as fh:
-            retained = list(csv.DictReader(fh))
-    retained_old = [r.get("old_label", "") for r in retained]
-    note = f"""# M_new_drop5_drop7 quality-control note
-
-This note is intentionally conservative. The cleaned M dataset should not be
-justified by improved clustering results alone.
-
-Available label_map: `{label_map}`
-
-Retained old_label values found in label_map:
-
-{", ".join(retained_old) if retained_old else "label_map not found"}
-
-Recommended manuscript wording:
-
-> The quality-controlled M subset is reported as the main stress-test set,
-> while the complete M_new set is retained as a robustness comparison. The
-> exclusion criteria must be based on dataset-level quality-control criteria
-> such as ambiguous class definition, non-leaf disease images, label noise,
-> corrupted files, insufficient samples, or semantic duplication, rather than
-> model performance.
-
-Important limitation:
-
-> Compared with complete M_new, the cleaned subset improves post-hoc aligned
-> retained-sample accuracy and coverage, but some structure metrics such as
-> ARI/NMI do not improve monotonically. Therefore the cleaned set should be
-> described as a quality-controlled subset, not as evidence that clustering
-> quality improved in every metric.
-"""
-    (out_dir / "m_cleaning_note.md").write_text(note, encoding="utf-8")
-    if retained:
-        write_csv(out_dir / "M_new_drop5_drop7_retained_label_map.csv", retained)
-
-
-def phash_component_template(out: Path) -> None:
-    script = r'''#!/usr/bin/env python3
-"""Apply filled pHash manual audit decisions by connected components.
-
-Default mode is non-destructive. It writes a removal manifest and, optionally,
-copies cleaned datasets to a new directory. Fill the audit CSV columns first:
-
-- judgement: exact_variant, crop_or_rotation, same_leaf_sequence,
-  visually_similar, uncertain
-- action: delete_one, delete_a, delete_b, keep_all
-
-For delete_one, the script builds connected components and keeps one image per
-component by largest file size, then lexical name. It never deletes originals.
-"""
-from __future__ import annotations
-
-import argparse
-import csv
-import shutil
-from collections import defaultdict, deque
-from pathlib import Path
-
-IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
-
-
-def read_rows(path: Path):
-    with path.open(encoding="utf-8-sig", newline="") as f:
-        return list(csv.DictReader(f))
-
-
-def write_rows(path: Path, rows):
-    path.parent.mkdir(parents=True, exist_ok=True)
-    keys = sorted({k for r in rows for k in r})
-    with path.open("w", encoding="utf-8", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=keys)
-        w.writeheader()
-        w.writerows(rows)
-
-
-def choose_keep(data_root: Path, ds: str, names: set[str]) -> str:
-    def rank(name: str):
-        p = data_root / ds / name
-        size = p.stat().st_size if p.exists() else -1
-        return (-size, name)
-    return sorted(names, key=rank)[0]
-
-
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--audit-csv", type=Path, required=True)
-    ap.add_argument("--data-root", type=Path, default=Path("/data1/D"))
-    ap.add_argument("--out", type=Path, required=True)
-    ap.add_argument("--copy-clean-datasets", action="store_true")
-    args = ap.parse_args()
-
-    rows = read_rows(args.audit_csv)
-    graph = defaultdict(lambda: defaultdict(set))
-    forced_remove = defaultdict(set)
-    kept_pairs = 0
-    for r in rows:
-        ds = r.get("dataset", "")
-        a = Path(r.get("image_a", "")).name
-        b = Path(r.get("image_b", "")).name
-        action = r.get("action", "").strip().lower()
-        if action in {"keep_all", "keep", ""}:
-            kept_pairs += 1
-            continue
-        if action == "delete_a":
-            forced_remove[ds].add(a)
-        elif action == "delete_b":
-            forced_remove[ds].add(b)
-        elif action == "delete_one":
-            graph[ds][a].add(b)
-            graph[ds][b].add(a)
-        else:
-            raise ValueError(f"Unknown action {action!r} in row {r}")
-
-    manifest = []
-    for ds, adj in graph.items():
-        seen = set()
-        for start in sorted(adj):
-            if start in seen:
-                continue
-            q = deque([start])
-            comp = set()
-            seen.add(start)
-            while q:
-                cur = q.popleft()
-                comp.add(cur)
-                for nxt in adj[cur]:
-                    if nxt not in seen:
-                        seen.add(nxt)
-                        q.append(nxt)
-            keep = choose_keep(args.data_root, ds, comp)
-            for name in sorted(comp - {keep}):
-                forced_remove[ds].add(name)
-                manifest.append({"dataset": ds, "component_keep": keep, "remove_file": name, "reason": "phash_component_delete_one"})
-
-    for ds, names in forced_remove.items():
-        for name in sorted(names):
-            if not any(m["dataset"] == ds and m["remove_file"] == name for m in manifest):
-                manifest.append({"dataset": ds, "component_keep": "", "remove_file": name, "reason": "manual_forced_remove"})
-
-    write_rows(args.out / "phash_removal_manifest.csv", manifest)
-
-    if args.copy_clean_datasets:
-        for ds_dir in sorted(p for p in args.data_root.iterdir() if p.is_dir()):
-            ds = ds_dir.name
-            remove = forced_remove.get(ds, set())
-            if not remove:
-                continue
-            target = args.out / f"{ds}_phash_clean"
-            target.mkdir(parents=True, exist_ok=True)
-            for p in sorted(ds_dir.iterdir()):
-                if p.is_file() and p.suffix.lower() in IMAGE_SUFFIXES and p.name not in remove:
-                    shutil.copy2(p, target / p.name)
-
-    print(f"manual keep/blank pairs: {kept_pairs}")
-    print(f"removal candidates: {len(manifest)}")
-    print(args.out)
-
-
-if __name__ == "__main__":
-    main()
-'''
-    tool_dir = out / "tools"
-    tool_dir.mkdir(parents=True, exist_ok=True)
-    (tool_dir / "apply_phash_connected_components.py").write_text(script, encoding="utf-8")
-
-
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--data-root", type=Path, default=Path("/data1/D"))
-    ap.add_argument("--feature-root", type=Path, default=Path("/data1/D/hostal/audit_unsupervised_20260720"))
-    ap.add_argument("--followup-root", type=Path, default=Path("/data1/D/hostal/protocolA_followup_20260720"))
-    ap.add_argument("--out", type=Path, default=Path("/data1/D/hostal/protocolA_final_required_patch_20260720"))
+    ap.add_argument("--data-root", type=Path, default=DEFAULT_DATA_ROOT)
+    ap.add_argument("--feature-root", type=Path, default=DEFAULT_FEATURE_ROOT)
+    ap.add_argument("--followup-root", type=Path, default=DEFAULT_FOLLOWUP_ROOT)
+    ap.add_argument("--out", type=Path, default=DEFAULT_OUT_ROOT)
     args = ap.parse_args()
+    print("[config]")
+    print(f"  data_root     = {args.data_root}")
+    print(f"  feature_root  = {args.feature_root}")
+    print(f"  followup_root = {args.followup_root}")
+    print(f"  out           = {args.out}")
 
     class_level_5seed(args.feature_root, args.followup_root, args.out)
     paired_seed_bootstrap(args.followup_root, args.out)
     discrete_risk_coverage(args.followup_root, args.out)
-    m_cleaning_note(args.data_root, args.out)
-    phash_component_template(args.out)
     (args.out / "README.md").write_text(textwrap.dedent(f"""
         # Protocol A final required patch
 
@@ -433,15 +273,18 @@ def main() -> None:
           plus five-seed averaged row-normalized confusion matrices.
         - `bootstrap_seedlevel/`: paired seed-level bootstrap confidence intervals.
         - `risk_coverage_discrete/`: discrete risk-coverage operating points.
-        - `m_cleaning_note/`: conservative M-cleaning wording and retained label map.
-        - `tools/apply_phash_connected_components.py`: non-destructive utility to
-          apply filled pHash manual decisions after human review.
 
-        pHash manual audit is still not closed until the `judgement` and `action`
-        fields are filled by human reviewers.
+        Final dataset policy:
+
+        - Main MCLD dataset is complete `M_new` / `MCLD-11`.
+        - pHash is only a near-duplicate risk audit and does not delete images.
     """).strip() + "\n", encoding="utf-8")
     print(args.out)
 
 
 if __name__ == "__main__":
     main()
+
+
+
+
