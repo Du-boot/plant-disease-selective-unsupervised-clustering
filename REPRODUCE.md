@@ -174,14 +174,15 @@ Expected DINOv2 all3 means:
 
 ```bash
 python code/rebuild_v13_figures.py
-python code/make_server_confusion_figure_style.py
+python code/draw_individual_confusion_matrices_server.py
 ```
 
 Default figure outputs:
 
 ```text
 figures/v13_figure_report/reproduced_figures/
-outputs/confusion_figures/Fig10_four_dataset_kept_confusion_matrices.png
+outputs/individual_confusion_matrices_server_style/retained_samples/
+outputs/individual_confusion_matrices_server_style/all_samples_with_rejected/
 ```
 
 Archived V13 figure source data and PNG/PDF outputs are already stored at:
@@ -194,6 +195,10 @@ figures/v13_figure_report/reproduced_figures/
 High-resolution TIFF submission figures are intentionally not duplicated in the
 GitHub-ready light archive because they are large; they are available in the
 separate Baidu Netdisk package.
+
+The final confusion matrices are intentionally exported as separate figures
+(`Fig10a`--`Fig10d` and `FigS01a`--`FigS01d`). This preserves complete class
+names and cell annotations that would become unreadable in a four-panel layout.
 
 ## 8. Verify Archived Final Tables Without Rerunning
 

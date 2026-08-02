@@ -1,103 +1,175 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>V13 figure reproduction report</title>
-<style>
-body{margin:0;background:#f5f7fa;color:#1f2937;font-family:Arial,'Microsoft YaHei',sans-serif;line-height:1.6}
-header{background:#fff;border-bottom:1px solid #d9e1ea;padding:24px 32px}
-main{max-width:1450px;margin:0 auto;padding:20px 24px 44px}
-.note,.card{background:#fff;border:1px solid #d9e1ea;border-radius:8px;padding:16px;margin:14px 0}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(430px,1fr));gap:16px}
-img{display:block;width:100%;height:auto;border:1px solid #e5e7eb;background:white;border-radius:6px}
-a{color:#16697a;text-decoration:none;margin-right:10px} code{background:#eef3f5;padding:2px 5px;border-radius:4px}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>V13 论文最终图件包</title>
+  <style>
+    body { margin: 0; font-family: Arial, "Microsoft YaHei", sans-serif; color: #172033; background: #f6f8fb; }
+    header { padding: 28px 36px 18px; background: #ffffff; border-bottom: 1px solid #e5e7eb; }
+    h1 { margin: 0 0 8px; font-size: 26px; }
+    header p { margin: 0; max-width: 980px; line-height: 1.7; color: #475569; }
+    main { padding: 24px 36px 44px; display: grid; gap: 22px; }
+    .card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 18px; }
+    .meta { color: #64748b; font-size: 13px; margin-bottom: 4px; }
+    h2 { margin: 0 0 8px; font-size: 20px; }
+    p { line-height: 1.65; }
+    img { width: 100%; max-width: 1500px; display: block; background: white; border: 1px solid #eef2f7; }
+    code { background: #f1f5f9; padding: 2px 5px; border-radius: 4px; }
+    .source { color: #64748b; font-size: 13px; }
+  </style>
 </head>
 <body>
-<header>
-<h1>V13 figure reproduction report</h1>
-<p>All figures are rebuilt by <code>code/rebuild_v13_figures.py</code> from archived CSV files and representative source images; no values are inferred from manuscript text.</p>
-</header>
-<main>
-<section class="note">
-<p>Rerun command: <code>python code/rebuild_v13_figures.py</code></p>
-<p>Figure inventory: <a href="figure_experiment_inventory.csv">figure_experiment_inventory.csv</a></p>
-</section>
-<h2>Main Figures</h2>
-<div class="grid">
+  <header>
+    <h1>V13 论文最终图件包</h1>
+    <p>统一四数据集、UMAP 100-D、n_neighbors=15、min_dist=0.1、K=60。正文主图、补充图、源数据和图件目录均已整理到同一文件夹。</p>
+  </header>
+  <main>
 
             <section class="card">
-              <h3>Fig01. Detailed framework</h3>
-              <a href="reproduced_figures/Main_Figures/Fig01_Detailed_Framework.png" target="_blank"><img src="reproduced_figures/Main_Figures/Fig01_Detailed_Framework.png" alt="Fig01"></a>
-              <p><a href="reproduced_figures/Main_Figures/Fig01_Detailed_Framework.png">PNG</a> <a href="reproduced_figures/Main_Figures/Fig01_Detailed_Framework.pdf">PDF</a> <a href="reproduced_figures/Main_Figures/Fig01_Detailed_Framework.tif">TIFF</a></p>
+              <div class="meta">Fig01 · 正文</div>
+              <h2>方法总流程图</h2>
+              <p>传导式选择性无监督聚类；主实验为 UMAP 100-D + K=60。</p>
+              <img src="Main_Figures/Fig01_Detailed_Framework.png" alt="Fig01 方法总流程图">
+              <p class="source">源数据：<code>脚本定义方法流程</code></p>
             </section>
-            
+
             <section class="card">
-              <h3>Fig02. Representative dataset images</h3>
-              <a href="reproduced_figures/Main_Figures/Fig02_Representative_Dataset_Images.png" target="_blank"><img src="reproduced_figures/Main_Figures/Fig02_Representative_Dataset_Images.png" alt="Fig02"></a>
-              <p><a href="reproduced_figures/Main_Figures/Fig02_Representative_Dataset_Images.png">PNG</a> <a href="reproduced_figures/Main_Figures/Fig02_Representative_Dataset_Images.pdf">PDF</a> <a href="reproduced_figures/Main_Figures/Fig02_Representative_Dataset_Images.tif">TIFF</a></p>
+              <div class="meta">Fig02 · 正文</div>
+              <h2>四个数据集代表性原图</h2>
+              <p>PV-Fruit、PV-Vegetable、MCLD-11、DFLD-BR-4 各展示未经增强的代表图像。</p>
+              <img src="Main_Figures/Fig02_Representative_Dataset_Images.png" alt="Fig02 四个数据集代表性原图">
+              <p class="source">源数据：<code>Source_Data/representative_images/</code></p>
             </section>
-            
+
             <section class="card">
-              <h3>Fig03. Post-hoc many-to-one mapping</h3>
-              <a href="reproduced_figures/Main_Figures/Fig03_PostHoc_ManyToOne_Mapping.png" target="_blank"><img src="reproduced_figures/Main_Figures/Fig03_PostHoc_ManyToOne_Mapping.png" alt="Fig03"></a>
-              <p><a href="reproduced_figures/Main_Figures/Fig03_PostHoc_ManyToOne_Mapping.png">PNG</a> <a href="reproduced_figures/Main_Figures/Fig03_PostHoc_ManyToOne_Mapping.pdf">PDF</a> <a href="reproduced_figures/Main_Figures/Fig03_PostHoc_ManyToOne_Mapping.tif">TIFF</a></p>
+              <div class="meta">Fig03 · 正文</div>
+              <h2>事后多对一类别映射示意图</h2>
+              <p>真实标签只在聚类和拒识结果固定后用于事后评价。</p>
+              <img src="Main_Figures/Fig03_PostHoc_ManyToOne_Mapping.png" alt="Fig03 事后多对一类别映射示意图">
+              <p class="source">源数据：<code>脚本定义示意图</code></p>
             </section>
-            
+
             <section class="card">
-              <h3>Fig04. Main C3 results</h3>
-              <a href="reproduced_figures/Main_Figures/Fig04_Main_C3_Results.png" target="_blank"><img src="reproduced_figures/Main_Figures/Fig04_Main_C3_Results.png" alt="Fig04"></a>
-              <p><a href="reproduced_figures/Main_Figures/Fig04_Main_C3_Results.png">PNG</a> <a href="reproduced_figures/Main_Figures/Fig04_Main_C3_Results.pdf">PDF</a> <a href="reproduced_figures/Main_Figures/Fig04_Main_C3_Results.tif">TIFF</a></p>
+              <div class="meta">Fig04 · 正文</div>
+              <h2>C3 主实验结果</h2>
+              <p>展示 Acc_kept、Coverage 与保守全样本准确率，误差线为 5 个随机种子标准差。</p>
+              <img src="Main_Figures/Fig04_Main_C3_Results.png" alt="Fig04 C3 主实验结果">
+              <p class="source">源数据：<code>Source_Data/main_results/clean_main.csv</code></p>
             </section>
-            
+
             <section class="card">
-              <h3>Fig05. All vs retained metrics</h3>
-              <a href="reproduced_figures/Main_Figures/Fig05_All_vs_Retained_Clustering_Metrics.png" target="_blank"><img src="reproduced_figures/Main_Figures/Fig05_All_vs_Retained_Clustering_Metrics.png" alt="Fig05"></a>
-              <p><a href="reproduced_figures/Main_Figures/Fig05_All_vs_Retained_Clustering_Metrics.png">PNG</a> <a href="reproduced_figures/Main_Figures/Fig05_All_vs_Retained_Clustering_Metrics.pdf">PDF</a> <a href="reproduced_figures/Main_Figures/Fig05_All_vs_Retained_Clustering_Metrics.tif">TIFF</a></p>
+              <div class="meta">Fig05 · 正文</div>
+              <h2>全部样本与保留样本聚类指标</h2>
+              <p>比较 ARI/NMI/AMI 的 all 与 kept 指标。</p>
+              <img src="Main_Figures/Fig05_All_vs_Retained_Clustering_Metrics.png" alt="Fig05 全部样本与保留样本聚类指标">
+              <p class="source">源数据：<code>Source_Data/main_results/summary_all_vs_kept_cluster_metrics.csv</code></p>
             </section>
-            
+
             <section class="card">
-              <h3>Fig06. Fair dimensionality reduction</h3>
-              <a href="reproduced_figures/Main_Figures/Fig06_Fair_Dimensionality_Reduction.png" target="_blank"><img src="reproduced_figures/Main_Figures/Fig06_Fair_Dimensionality_Reduction.png" alt="Fig06"></a>
-              <p><a href="reproduced_figures/Main_Figures/Fig06_Fair_Dimensionality_Reduction.png">PNG</a> <a href="reproduced_figures/Main_Figures/Fig06_Fair_Dimensionality_Reduction.pdf">PDF</a> <a href="reproduced_figures/Main_Figures/Fig06_Fair_Dimensionality_Reduction.tif">TIFF</a></p>
+              <div class="meta">Fig06 · 正文或补充</div>
+              <h2>公平降维对照</h2>
+              <p>同一张柱状图内比较四个数据集的 Raw 2048D、PCA 100D 和 UMAP 100D。</p>
+              <img src="Main_Figures/Fig06_Fair_Dimensionality_Reduction.png" alt="Fig06 公平降维对照">
+              <p class="source">源数据：<code>Source_Data/main_results/fair_reduction_5seeds.csv</code></p>
             </section>
-            
+
             <section class="card">
-              <h3>Fig07. Parameter sensitivity</h3>
-              <a href="reproduced_figures/Main_Figures/Fig07_Parameter_Sensitivity.png" target="_blank"><img src="reproduced_figures/Main_Figures/Fig07_Parameter_Sensitivity.png" alt="Fig07"></a>
-              <p><a href="reproduced_figures/Main_Figures/Fig07_Parameter_Sensitivity.png">PNG</a> <a href="reproduced_figures/Main_Figures/Fig07_Parameter_Sensitivity.pdf">PDF</a> <a href="reproduced_figures/Main_Figures/Fig07_Parameter_Sensitivity.tif">TIFF</a></p>
+              <div class="meta">Fig07 · 正文或补充</div>
+              <h2>参数敏感性</h2>
+              <p>突出 UMAP100 下 K=20 参考配置与 K=60 最终配置；完整参数表放源数据。</p>
+              <img src="Main_Figures/Fig07_Parameter_Sensitivity.png" alt="Fig07 参数敏感性">
+              <p class="source">源数据：<code>Source_Data/main_results/parameter_sensitivity_5seeds.csv</code></p>
             </section>
-            
+
             <section class="card">
-              <h3>Fig08. External DINOv2 baseline</h3>
-              <a href="reproduced_figures/Main_Figures/Fig08_External_DINOv2_Baseline.png" target="_blank"><img src="reproduced_figures/Main_Figures/Fig08_External_DINOv2_Baseline.png" alt="Fig08"></a>
-              <p><a href="reproduced_figures/Main_Figures/Fig08_External_DINOv2_Baseline.png">PNG</a> <a href="reproduced_figures/Main_Figures/Fig08_External_DINOv2_Baseline.pdf">PDF</a> <a href="reproduced_figures/Main_Figures/Fig08_External_DINOv2_Baseline.tif">TIFF</a></p>
+              <div class="meta">Fig08 · 正文</div>
+              <h2>DINOv2 外部自监督骨干基线</h2>
+              <p>同一张散点图内比较四个数据集；不把 ConvNeXt 与 DINOv2 差距解释为骨干优劣。</p>
+              <img src="Main_Figures/Fig08_External_DINOv2_Baseline.png" alt="Fig08 DINOv2 外部自监督骨干基线">
+              <p class="source">源数据：<code>Source_Data/dinov2/summary_convnext_vs_dinov2_key.csv</code></p>
             </section>
-            
+
             <section class="card">
-              <h3>Fig09. Weak/high-rejection classes</h3>
-              <a href="reproduced_figures/Main_Figures/Fig09_Weak_and_HighRejection_Classes.png" target="_blank"><img src="reproduced_figures/Main_Figures/Fig09_Weak_and_HighRejection_Classes.png" alt="Fig09"></a>
-              <p><a href="reproduced_figures/Main_Figures/Fig09_Weak_and_HighRejection_Classes.png">PNG</a> <a href="reproduced_figures/Main_Figures/Fig09_Weak_and_HighRejection_Classes.pdf">PDF</a> <a href="reproduced_figures/Main_Figures/Fig09_Weak_and_HighRejection_Classes.tif">TIFF</a></p>
+              <div class="meta">Fig09 · 正文或补充</div>
+              <h2>薄弱类别与高拒识类别</h2>
+              <p>用于讨论 MCLD-11 和 PV-Vegetable 中的困难类别。</p>
+              <img src="Main_Figures/Fig09_Weak_and_HighRejection_Classes.png" alt="Fig09 薄弱类别与高拒识类别">
+              <p class="source">源数据：<code>Source_Data/confusion_matrices/weak_or_high_rejection_classes_5seed.csv</code></p>
             </section>
-            
+
             <section class="card">
-              <h3>Fig10. Four-dataset kept confusion matrices</h3>
-              <a href="reproduced_figures/Main_Figures/Fig10_FourDataset_Kept_Confusion_Matrices.png" target="_blank"><img src="reproduced_figures/Main_Figures/Fig10_FourDataset_Kept_Confusion_Matrices.png" alt="Fig10"></a>
-              <p><a href="reproduced_figures/Main_Figures/Fig10_FourDataset_Kept_Confusion_Matrices.png">PNG</a> <a href="reproduced_figures/Main_Figures/Fig10_FourDataset_Kept_Confusion_Matrices.pdf">PDF</a> <a href="reproduced_figures/Main_Figures/Fig10_FourDataset_Kept_Confusion_Matrices.tif">TIFF</a></p>
+              <div class="meta">Fig10a · 正文</div>
+              <h2>PV-Fruit 保留样本混淆矩阵</h2>
+              <p>服务器真实结果的 5-seed 平均按行归一化矩阵。</p>
+              <img src="Main_Figures/Fig10a_PV_Fruit_Kept_Confusion_Matrix.png" alt="Fig10a PV-Fruit 保留样本混淆矩阵">
+              <p class="source">源数据：<code>Source_Data/confusion_matrices/PV-Fruit_kept.csv</code></p>
             </section>
-            
+
             <section class="card">
-              <h3>Fig11. Discrete risk-coverage points</h3>
-              <a href="reproduced_figures/Main_Figures/Fig11_Discrete_Risk_Coverage_Points.png" target="_blank"><img src="reproduced_figures/Main_Figures/Fig11_Discrete_Risk_Coverage_Points.png" alt="Fig11"></a>
-              <p><a href="reproduced_figures/Main_Figures/Fig11_Discrete_Risk_Coverage_Points.png">PNG</a> <a href="reproduced_figures/Main_Figures/Fig11_Discrete_Risk_Coverage_Points.pdf">PDF</a> <a href="reproduced_figures/Main_Figures/Fig11_Discrete_Risk_Coverage_Points.tif">TIFF</a></p>
+              <div class="meta">Fig10b · 正文</div>
+              <h2>PV-Vegetable 保留样本混淆矩阵</h2>
+              <p>服务器真实结果的 5-seed 平均按行归一化矩阵。</p>
+              <img src="Main_Figures/Fig10b_PV_Vegetable_Kept_Confusion_Matrix.png" alt="Fig10b PV-Vegetable 保留样本混淆矩阵">
+              <p class="source">源数据：<code>Source_Data/confusion_matrices/PV-Vegetable_kept.csv</code></p>
             </section>
-            
-</div>
-<h2>Supplementary Confusion Matrices</h2>
-<div class="grid">
-<section class="card"><h3>FigS01_PV-Fruit_AllPlusRejected</h3><a href="reproduced_figures/Supplementary_Figures/FigS01_PV-Fruit_AllPlusRejected.png" target="_blank"><img src="reproduced_figures/Supplementary_Figures/FigS01_PV-Fruit_AllPlusRejected.png" alt="FigS01_PV-Fruit_AllPlusRejected"></a></section><section class="card"><h3>FigS02_PV-Vegetable_AllPlusRejected</h3><a href="reproduced_figures/Supplementary_Figures/FigS02_PV-Vegetable_AllPlusRejected.png" target="_blank"><img src="reproduced_figures/Supplementary_Figures/FigS02_PV-Vegetable_AllPlusRejected.png" alt="FigS02_PV-Vegetable_AllPlusRejected"></a></section><section class="card"><h3>FigS03_MCLD-11_AllPlusRejected</h3><a href="reproduced_figures/Supplementary_Figures/FigS03_MCLD-11_AllPlusRejected.png" target="_blank"><img src="reproduced_figures/Supplementary_Figures/FigS03_MCLD-11_AllPlusRejected.png" alt="FigS03_MCLD-11_AllPlusRejected"></a></section><section class="card"><h3>FigS04_DFLD-BR-4_AllPlusRejected</h3><a href="reproduced_figures/Supplementary_Figures/FigS04_DFLD-BR-4_AllPlusRejected.png" target="_blank"><img src="reproduced_figures/Supplementary_Figures/FigS04_DFLD-BR-4_AllPlusRejected.png" alt="FigS04_DFLD-BR-4_AllPlusRejected"></a></section>
-</div>
-</main>
+
+            <section class="card">
+              <div class="meta">Fig10c · 正文</div>
+              <h2>MCLD-11 保留样本混淆矩阵</h2>
+              <p>服务器真实结果的 5-seed 平均按行归一化矩阵。</p>
+              <img src="Main_Figures/Fig10c_MCLD_11_Kept_Confusion_Matrix.png" alt="Fig10c MCLD-11 保留样本混淆矩阵">
+              <p class="source">源数据：<code>Source_Data/confusion_matrices/MCLD-11_kept.csv</code></p>
+            </section>
+
+            <section class="card">
+              <div class="meta">Fig10d · 正文</div>
+              <h2>DFLD-BR-4 保留样本混淆矩阵</h2>
+              <p>服务器真实结果的 5-seed 平均按行归一化矩阵。</p>
+              <img src="Main_Figures/Fig10d_DFLD_BR_4_Kept_Confusion_Matrix.png" alt="Fig10d DFLD-BR-4 保留样本混淆矩阵">
+              <p class="source">源数据：<code>Source_Data/confusion_matrices/DFLD-BR-4_kept.csv</code></p>
+            </section>
+
+            <section class="card">
+              <div class="meta">Fig11 · 正文</div>
+              <h2>离散风险-覆盖率操作点</h2>
+              <p>同一张图内比较四个数据集；这是离散操作点，不是连续 AURC 曲线。</p>
+              <img src="Main_Figures/Fig11_Discrete_Risk_Coverage_Points.png" alt="Fig11 离散风险-覆盖率操作点">
+              <p class="source">源数据：<code>Source_Data/main_results/risk_coverage_discrete_operating_points.csv</code></p>
+            </section>
+
+            <section class="card">
+              <div class="meta">FigS01a · 补充</div>
+              <h2>PV-Fruit 全样本含 Rejected 混淆矩阵</h2>
+              <p>服务器真实结果的 5-seed 平均按行归一化矩阵；最后一列为 Rejected。</p>
+              <img src="Supplementary_Figures/FigS01a_PV_Fruit_AllPlusRejected_Confusion_Matrix.png" alt="FigS01a PV-Fruit 全样本含 Rejected 混淆矩阵">
+              <p class="source">源数据：<code>Source_Data/confusion_matrices/PV-Fruit_all_plus_Rejected.csv</code></p>
+            </section>
+
+            <section class="card">
+              <div class="meta">FigS01b · 补充</div>
+              <h2>PV-Vegetable 全样本含 Rejected 混淆矩阵</h2>
+              <p>服务器真实结果的 5-seed 平均按行归一化矩阵；最后一列为 Rejected。</p>
+              <img src="Supplementary_Figures/FigS01b_PV_Vegetable_AllPlusRejected_Confusion_Matrix.png" alt="FigS01b PV-Vegetable 全样本含 Rejected 混淆矩阵">
+              <p class="source">源数据：<code>Source_Data/confusion_matrices/PV-Vegetable_all_plus_Rejected.csv</code></p>
+            </section>
+
+            <section class="card">
+              <div class="meta">FigS01c · 补充</div>
+              <h2>MCLD-11 全样本含 Rejected 混淆矩阵</h2>
+              <p>服务器真实结果的 5-seed 平均按行归一化矩阵；最后一列为 Rejected。</p>
+              <img src="Supplementary_Figures/FigS01c_MCLD_11_AllPlusRejected_Confusion_Matrix.png" alt="FigS01c MCLD-11 全样本含 Rejected 混淆矩阵">
+              <p class="source">源数据：<code>Source_Data/confusion_matrices/MCLD-11_all_plus_Rejected.csv</code></p>
+            </section>
+
+            <section class="card">
+              <div class="meta">FigS01d · 补充</div>
+              <h2>DFLD-BR-4 全样本含 Rejected 混淆矩阵</h2>
+              <p>服务器真实结果的 5-seed 平均按行归一化矩阵；最后一列为 Rejected。</p>
+              <img src="Supplementary_Figures/FigS01d_DFLD_BR_4_AllPlusRejected_Confusion_Matrix.png" alt="FigS01d DFLD-BR-4 全样本含 Rejected 混淆矩阵">
+              <p class="source">源数据：<code>Source_Data/confusion_matrices/DFLD-BR-4_all_plus_Rejected.csv</code></p>
+            </section>
+
+  </main>
 </body>
 </html>

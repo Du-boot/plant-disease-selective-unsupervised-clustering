@@ -1,74 +1,81 @@
-# Protocol A 方法参数核查表
+# Protocol A V13/K60 方法参数
 
-本表根据服务器实际实验代码核实，代码位置主要包括：
+本文件记录 GitHub 归档版采用的最终 V13/finally3 实验配置。真实标签不参与特征提取、降维、聚类、簇对齐或拒识，只在全部结果固定后用于多对一事后类别映射和外部聚类评价。
 
-- `/data1/D/hostal/audit_unsupervised_experiments.py`
-- `/data1/D/hostal/protocolA_followup_experiments.py`
-- `/data1/D/hostal/protocolA_final_supplements.py`
+## 数据集
+
+| 代码目录 | 论文名称 | 说明 |
+|---|---|---|
+| `F_new` | PV-Fruit | PlantVillage 水果病害子集 |
+| `V_new` | PV-Vegetable | PlantVillage 蔬菜病害子集 |
+| `M_new` | MCLD-11 | SHA256 去重后的完整 11 类多作物病害数据集 |
+| `G_new` | DFLD-BR-4 | 去背景作物种类辅助数据集 |
+
+`M_new_drop5_drop7` / MCLD-9 不是 V13 最终主实验数据集。
 
 ## 特征提取
 
-| 模块 | 参数 |
+| 项目 | 参数 |
 |---|---|
-| 视觉骨干 | ConvNeXt-XLarge结构，代码中使用 `timm.create_model("convnext_xlarge_in22k", pretrained=False, num_classes=0, global_pool="avg")` 初始化；timm运行时会将该旧名称映射到当前ConvNeXt-XLarge实现 |
-| 权重 | `/data1/D/deploy/cn/model.safetensors`，作为本地外部权重检查点载入 |
-| 权重来源 | 当前文件无safetensors metadata，目录中尚未找到明确下载仓库、许可证或训练来源记录；投稿前应补充权重最初来源。来源确认前，正文不应写成“使用ImageNet-22K官方预训练权重” |
-| 权重载入 | 去掉 `model.` 前缀，排除 `head.weight` 和 `head.bias`，`strict=False` |
-| 是否微调 | 不微调；`model.eval()`，`torch.no_grad()`，仅作冻结特征提取器 |
-| 输入尺寸 | `224 × 224` |
-| 图像颜色 | RGB |
+| 视觉骨干 | `timm.create_model("convnext_xlarge_in22k", pretrained=False, num_classes=0, global_pool="avg")` |
+| 权重 | `models/model.safetensors` |
+| 权重来源 | 公开 timm ConvNeXt-XLarge ImageNet-22K 权重 |
+| 训练方式 | 本研究不微调；全部参数冻结，仅作为特征提取器 |
+| 输入尺寸 | `224 x 224` |
+| 颜色空间 | RGB |
 | 预处理 | `Resize((224, 224))`，`ToTensor()` |
-| 归一化 | mean = `[0.485, 0.456, 0.406]`，std = `[0.229, 0.224, 0.225]` |
-| 池化层 | `global_pool="avg"` |
-| 输出特征 | 2048维视觉特征，`float32` |
+| 归一化 | mean `[0.485, 0.456, 0.406]`，std `[0.229, 0.224, 0.225]` |
+| 特征层 | 全局平均池化输出 |
+| 输出维度 | 2048 维 `float32` |
 
 ## 降维
 
-| 模块 | 参数 |
+| 项目 | 参数 |
 |---|---|
 | 主方法 | UMAP |
-| 主配置 | `n_components=100` |
+| `n_components` | 100 |
 | `n_neighbors` | 15 |
 | `min_dist` | 0.1 |
 | `metric` | `euclidean` |
-| `random_state` | 当前随机种子，主实验为 `11, 22, 33, 44, 55` |
-| 对照 | PCA 100维；Raw 2048维 |
+| `random_state` | 当前随机种子 |
+| 随机种子 | `11, 22, 33, 44, 55` |
+
+公平降维对照包括 Raw 2048 维、PCA 100 维和 UMAP 100 维。
 
 ## 聚类
 
 | 算法 | 参数 |
 |---|---|
-| KMeans | `n_clusters=20`, `n_init=10`, `random_state=seed` |
-| KMeans未显式指定项 | `init="k-means++"`, `max_iter=300`, `tol=1e-4` 使用 scikit-learn 默认值 |
-| Birch | `threshold=0.11`, `branching_factor=25`, `n_clusters=20` |
-| Agglomerative | `n_clusters=20`, `linkage="ward"`；Ward linkage对应欧氏距离 |
+| KMeans | `n_clusters=60`, `n_init=10`, `init="k-means++"`, `max_iter=300`, `tol=1e-4`, `random_state=seed` |
+| Birch | `threshold=0.11`, `branching_factor=25`, `n_clusters=60` |
+| Agglomerative | `n_clusters=60`, `linkage="ward"`，对应欧氏距离 |
 
-## 簇编号对齐与共识拒识
+## 跨算法簇对齐与共识拒识
 
 | 步骤 | 定义 |
 |---|---|
-| 参考聚类 | KMeans作为参考聚类 |
-| 重叠矩阵 | 对KMeans簇 `i` 和另一算法簇 `j`，统计二者共同包含的样本数，得到 `20 × 20` overlap matrix |
-| 簇对齐 | 使用 `scipy.optimize.linear_sum_assignment(-overlap)`，即Hungarian算法最大化样本重叠 |
+| 参考聚类 | 以 KMeans 簇编号作为参考 |
+| 重叠矩阵 | 对 KMeans 簇 `i` 和另一算法簇 `j`，统计共同包含的样本数，形成 `60 x 60` overlap matrix |
+| Hungarian 对齐 | 使用 `scipy.optimize.linear_sum_assignment(-overlap)` 最大化样本重叠 |
 | 未匹配簇 | 映射不到参考簇时标记为 `-1` |
-| any2 | 三个聚类结果中任意两个算法对齐后的簇编号一致，则保留 |
-| all3 | KMeans、Birch、Agglomerative三个算法对齐后的簇编号全部一致，则保留 |
-| 拒识 | 不满足共识条件的样本标记为Rejected，不参与保留样本 `acc_kept` |
-| 评价映射 | 聚类、对齐和拒识全部固定后，真实标签仅用于多对一事后类别映射和外部评价 |
+| any2 / C2 | 三种聚类结果中任意两个算法对齐后的簇编号一致则保留 |
+| all3 / C3 | KMeans、Birch、Agglomerative 三者对齐后的簇编号全部一致则保留 |
+| 拒识样本 | 不满足共识条件的样本标记为 Rejected，不参与 `acc_kept` 计算 |
 
-## 数据审计口径
+## 事后评价
 
-| 项目 | 处理 |
-|---|---|
-| 完全重复 | 使用SHA256识别字节级完全重复图像，并删除重复副本 |
-| pHash近重复 | 仅作为近重复风险审计；不据此删图，不参与特征提取、降维、聚类、拒识或评价 |
+每个簇在聚类和拒识完成后映射到其保留样本中数量最多的真实类别：
 
-## 主实验配置
+```text
+m(j) = argmax_c |C_j ∩ Y_c|
+```
 
-| 项目 | 值 |
-|---|---|
-| UMAP维度 | 100 |
-| 聚类簇数 | 20 |
-| 随机种子 | 11, 22, 33, 44, 55 |
-| 主指标 | `acc_kept`，即高置信保留样本的事后对齐聚类准确率 |
-| 辅助指标 | rejection rate / coverage / overall accuracy / ARI / NMI / AMI / Homogeneity / Completeness / V-measure |
+核心指标包括：
+
+```text
+Coverage = N_kept / N
+Acc_kept = N_correct,kept / N_kept
+Conservative accuracy = Acc_kept x Coverage = N_correct,kept / N
+```
+
+保守全样本准确率把拒识样本计入全样本分母，但不表示被拒识样本真实上都被错误分类。

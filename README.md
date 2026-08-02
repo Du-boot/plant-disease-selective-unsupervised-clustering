@@ -22,11 +22,9 @@ alignment and external clustering evaluation.
 
 ```text
 code/                         V13/K60 reproduction scripts
-code/legacy_k20_v12/          Historical K=20/MCLD-9 report scripts, not final
-code/legacy_original_deploy/  Earlier deployment helpers retained for audit
 data/                         Dataset manifests and expected clean-data layout
 data_audit/                   SHA256 exact-duplicate and pHash risk-audit files
-docs/                         Method notes and manuscript supporting notes
+docs/                         V13/K60 method and figure notes
 external_baselines/dinov2/    DINOv2 baseline summaries and reports
 figures/v13_figure_report/    V13 figure source data and PNG/PDF figures
 models/                       Expected local checkpoint paths

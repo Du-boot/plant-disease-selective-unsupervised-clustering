@@ -25,8 +25,8 @@ Final V13 datasets:
 | `M_new` | MCLD-11 | Complete 11-class multi-crop disease dataset after SHA256 de-duplication |
 | `G_new` | DFLD-BR-4 | Auxiliary de-background crop-category dataset |
 
-The previous `M_new_drop5_drop7` / MCLD-9 subset is retained only in historical
-notes and is not part of the final V13 main experiment.
+The previous `M_new_drop5_drop7` / MCLD-9 subset is not part of the final V13
+main experiment and is not required to reproduce the archived results.
 
 The per-dataset summary and per-image SHA256 manifest are archived at:
 
