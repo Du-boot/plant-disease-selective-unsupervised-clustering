@@ -133,7 +133,9 @@ def draw_one(csv_path: Path, out_dir: Path, stem: str, title: str, dataset: str)
     fig, ax = plt.subplots(figsize=settings["figsize"], constrained_layout=False)
     im = ax.imshow(mat * 100, cmap="Blues", vmin=0, vmax=100, aspect="equal")
     ax.set_xlim(-0.5, mat.shape[1] - 0.5)
-    ax.set_ylim(mat.shape[0] - 0.5, -0.5)
+    # Leave a small data-space margin above the first row so tight export never
+    # clips the first annotation or the top edge of the matrix.
+    ax.set_ylim(mat.shape[0] - 0.5, -0.75)
 
     ax.set_title(title, fontsize=10, pad=18)
     ax.set_xlabel("Predicted class", labelpad=10, fontsize=8.5)

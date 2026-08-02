@@ -251,16 +251,16 @@ def prepare_source_data_from_server() -> None:
     prepare_representative_images_from_server()
 
 
-def save_figure(fig: plt.Figure, folder: Path, stem: str) -> dict[str, str]:
+def save_figure(fig: plt.Figure, folder: Path, stem: str, pad_inches: float = 0.04) -> dict[str, str]:
     paths: dict[str, str] = {}
     for ext in ["png", "pdf", "tif"]:
         path = folder / f"{stem}.{ext}"
         if ext == "png":
-            fig.savefig(path, dpi=300, bbox_inches="tight", pad_inches=0.04)
+            fig.savefig(path, dpi=300, bbox_inches="tight", pad_inches=pad_inches)
         elif ext == "tif":
-            fig.savefig(path, dpi=600, bbox_inches="tight", pad_inches=0.04)
+            fig.savefig(path, dpi=600, bbox_inches="tight", pad_inches=pad_inches)
         else:
-            fig.savefig(path, bbox_inches="tight", pad_inches=0.04)
+            fig.savefig(path, bbox_inches="tight", pad_inches=pad_inches)
         paths[ext] = path.relative_to(ROOT).as_posix()
     plt.close(fig)
     return paths
@@ -818,16 +818,20 @@ def draw_confusion_panel(
     rows = [display_class_name(r) for r in rows]
     cols = [display_class_name(c) for c in cols]
     im = ax.imshow(mat * 100, cmap="Blues", vmin=0, vmax=100, aspect="equal")
-    ax.set_title(title, fontsize=9, pad=12)
-    ax.set_xlabel("Predicted class", labelpad=10)
-    ax.set_ylabel("True class", labelpad=14)
+    ax.set_xlim(-0.5, mat.shape[1] - 0.5)
+    # Leave a small data-space margin above the first row so tight export never
+    # clips the first annotation or the top edge of the matrix.
+    ax.set_ylim(mat.shape[0] - 0.5, -0.75)
+    ax.set_title(title, fontsize=10, pad=18)
+    ax.set_xlabel("Predicted class", labelpad=10, fontsize=8.5)
+    ax.set_ylabel("True class", labelpad=10, fontsize=8.5)
     if show_labels:
         ax.set_xticks(np.arange(len(cols)))
-        ax.set_xticklabels([wrap_label(c, x_wrap) for c in cols], rotation=48, ha="right", va="top", fontsize=tick_fontsize)
+        ax.set_xticklabels([wrap_label(c, x_wrap) for c in cols], rotation=55, ha="right", va="top", fontsize=tick_fontsize)
         ax.set_yticks(np.arange(len(rows)))
         ax.set_yticklabels([wrap_label(r, y_wrap) for r in rows], fontsize=tick_fontsize)
         ax.tick_params(axis="x", pad=5)
-        ax.tick_params(axis="y", pad=4)
+        ax.tick_params(axis="y", pad=3)
     else:
         xlabels = [str(i) for i in range(len(cols))]
         if cols and str(cols[-1]).lower() == "rejected":
@@ -842,68 +846,70 @@ def draw_confusion_panel(
             if val < 0.05:
                 continue
             text = f"{val:.0f}" if abs(val - round(val)) < 0.05 else f"{val:.1f}"
-            ax.text(j, i, text, ha="center", va="center", fontsize=annot_fontsize, color="white" if val >= 55 else "#2B2B2B")
+            ax.text(j, i, text, ha="center", va="center", fontsize=annot_fontsize, color="white" if val >= 55 else "#2B2B2B", clip_on=False)
     for spine in ax.spines.values():
         spine.set_visible(False)
     return im
 
 
-def fig10_kept_confusions() -> dict[str, str]:
-    fig = plt.figure(figsize=(18.0, 15.2))
-    gs = fig.add_gridspec(
-        2,
-        3,
-        width_ratios=[1.04, 1.18, 0.035],
-        height_ratios=[1.0, 1.0],
-        left=0.085,
-        right=0.94,
-        bottom=0.12,
-        top=0.91,
-        wspace=0.30,
-        hspace=0.42,
+CONFUSION_STANDALONE_SETTINGS = {
+    "PV-Fruit": dict(figsize=(11.8, 11.6), tick_fontsize=7.0, annot_fontsize=6.7, x_wrap=14, y_wrap=19, left=0.27, right=0.88, bottom=0.29, top=0.90),
+    "PV-Vegetable": dict(figsize=(12.6, 12.5), tick_fontsize=6.6, annot_fontsize=6.2, x_wrap=14, y_wrap=20, left=0.28, right=0.88, bottom=0.30, top=0.90),
+    "MCLD-11": dict(figsize=(12.6, 12.5), tick_fontsize=6.6, annot_fontsize=6.2, x_wrap=14, y_wrap=20, left=0.28, right=0.88, bottom=0.30, top=0.90),
+    "DFLD-BR-4": dict(figsize=(9.5, 9.3), tick_fontsize=8.0, annot_fontsize=7.2, x_wrap=16, y_wrap=18, left=0.25, right=0.87, bottom=0.26, top=0.90),
+}
+
+
+def standalone_confusion_figure(csv_path: Path, dataset: str, title: str, folder: Path, stem: str) -> dict[str, str]:
+    settings = CONFUSION_STANDALONE_SETTINGS[dataset]
+    fig, ax = plt.subplots(figsize=settings["figsize"])
+    im = draw_confusion_panel(
+        ax,
+        csv_path,
+        title,
+        show_labels=True,
+        tick_fontsize=settings["tick_fontsize"],
+        annot_fontsize=settings["annot_fontsize"],
+        x_wrap=settings["x_wrap"],
+        y_wrap=settings["y_wrap"],
     )
-    axes = [
-        fig.add_subplot(gs[0, 0]),
-        fig.add_subplot(gs[0, 1]),
-        fig.add_subplot(gs[1, 0]),
-        fig.add_subplot(gs[1, 1]),
-    ]
-    ims = []
-    panel_settings = {
-        "PV-Fruit": dict(tick_fontsize=5.8, annot_fontsize=5.2, x_wrap=12, y_wrap=17),
-        "PV-Vegetable": dict(tick_fontsize=5.0, annot_fontsize=4.8, x_wrap=11, y_wrap=16),
-        "MCLD-11": dict(tick_fontsize=5.1, annot_fontsize=4.9, x_wrap=11, y_wrap=16),
-        "DFLD-BR-4": dict(tick_fontsize=7.0, annot_fontsize=5.7, x_wrap=13, y_wrap=13),
-    }
-    for ax, ds in zip(axes, CONFUSION_MAP):
-        kept_csv = CONF / CONFUSION_MAP[ds][0]
-        ims.append(
-            draw_confusion_panel(
-                ax,
-                kept_csv,
-                f"{ds}: retained samples",
-                show_labels=True,
-                **panel_settings[ds],
-            )
-        )
-    cax = fig.add_subplot(gs[:, 2])
-    cbar = fig.colorbar(ims[-1], cax=cax)
+    cbar = fig.colorbar(im, ax=ax, fraction=0.035, pad=0.03)
     cbar.set_label("Row-normalized value (%)")
-    fig.suptitle("Four-dataset retained-sample confusion matrices", fontsize=12, y=0.965)
-    return save_figure(fig, MAIN_FIG, "Fig10_FourDataset_Kept_Confusion_Matrices")
+    cbar.ax.tick_params(labelsize=7)
+    fig.subplots_adjust(
+        left=settings["left"],
+        right=settings["right"],
+        bottom=settings["bottom"],
+        top=settings["top"],
+    )
+    return save_figure(fig, folder, stem, pad_inches=0.26)
 
 
-def supplementary_confusions() -> list[dict[str, str]]:
-    outputs = []
-    for idx, ds in enumerate(CONFUSION_MAP, start=1):
-        csv_path = CONF / CONFUSION_MAP[ds][1]
-        fig, ax = plt.subplots(figsize=(8.6, 6.8))
-        im = draw_confusion_panel(ax, csv_path, f"{ds}: all samples with Rejected", show_labels=True)
-        cbar = fig.colorbar(im, ax=ax, fraction=0.035, pad=0.03)
-        cbar.set_label("Row-normalized value (%)")
-        fig.tight_layout()
-        stem = f"FigS{idx:02d}_{ds}_AllPlusRejected".replace("/", "-")
-        outputs.append(save_figure(fig, SUPP_FIG, stem))
+def fig10_kept_confusions() -> dict[str, dict[str, str]]:
+    outputs = {}
+    for letter, dataset in zip("abcd", CONFUSION_MAP):
+        stem = f"Fig10{letter}_{dataset.replace('-', '_')}_Kept_Confusion_Matrix"
+        outputs[f"Fig10{letter}"] = standalone_confusion_figure(
+            CONF / CONFUSION_MAP[dataset][0],
+            dataset,
+            f"{dataset}: retained samples",
+            MAIN_FIG,
+            stem,
+        )
+    return outputs
+
+
+def supplementary_confusions() -> dict[str, dict[str, str]]:
+    outputs = {}
+    for letter, dataset in zip("abcd", CONFUSION_MAP):
+        stem = f"FigS01{letter}_{dataset.replace('-', '_')}_AllPlusRejected_Confusion_Matrix"
+        outputs[f"FigS01{letter}"] = standalone_confusion_figure(
+            CONF / CONFUSION_MAP[dataset][1],
+            dataset,
+            f"{dataset}: all samples with Rejected",
+            SUPP_FIG,
+            stem,
+        )
     return outputs
 
 
@@ -982,9 +988,33 @@ def write_inventory(outputs: dict[str, dict[str, str]]) -> None:
         ("Fig07", "Parameter sensitivity", "bar chart", "source_data/main_results/parameter_sensitivity_5seeds.csv", outputs["Fig07"]),
         ("Fig08", "External DINOv2 baseline", "errorbar scatter", "source_data/dinov2/summary_convnext_vs_dinov2_key.csv", outputs["Fig08"]),
         ("Fig09", "Weak and high-rejection classes", "horizontal bars", "source_data/confusion_matrices/weak_or_high_rejection_classes_5seed.csv", outputs["Fig09"]),
-        ("Fig10", "Four-dataset retained confusion matrices", "heatmap grid", "source_data/confusion_matrices/*_kept.csv", outputs["Fig10"]),
-        ("Fig11", "Discrete risk-coverage points", "scatter/line", "source_data/main_results/risk_coverage_discrete_operating_points.csv", outputs["Fig11"]),
     ]
+    for letter, dataset in zip("abcd", CONFUSION_MAP):
+        fig_id = f"Fig10{letter}"
+        rows.append(
+            (
+                fig_id,
+                f"{dataset} retained confusion matrix",
+                "standalone heatmap",
+                f"source_data/confusion_matrices/{CONFUSION_MAP[dataset][0]}",
+                outputs[fig_id],
+            )
+        )
+    rows.append(
+        ("Fig11", "Discrete risk-coverage points", "scatter/line", "source_data/main_results/risk_coverage_discrete_operating_points.csv", outputs["Fig11"])
+    )
+    # Keep the supplementary matrices in the same machine-readable inventory.
+    for letter, dataset in zip("abcd", CONFUSION_MAP):
+        fig_id = f"FigS01{letter}"
+        rows.append(
+            (
+                fig_id,
+                f"{dataset} all-sample matrix with Rejected",
+                "standalone heatmap",
+                f"source_data/confusion_matrices/{CONFUSION_MAP[dataset][1]}",
+                outputs[fig_id],
+            )
+        )
     with (ROOT / "figure_experiment_inventory.csv").open("w", encoding="utf-8-sig", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=["figure", "title", "type", "source", "png", "pdf", "tif"])
         writer.writeheader()
@@ -994,34 +1024,52 @@ def write_inventory(outputs: dict[str, dict[str, str]]) -> None:
 
 def write_html(outputs: dict[str, dict[str, str]]) -> None:
     cards = []
-    for fig_id in [f"Fig{i:02d}" for i in range(1, 12)]:
+    main_ids = [f"Fig{i:02d}" for i in range(1, 10)] + ["Fig10a", "Fig10b", "Fig10c", "Fig10d", "Fig11"]
+    title_map = {
+        "Fig01": "Detailed framework",
+        "Fig02": "Representative dataset images",
+        "Fig03": "Post-hoc many-to-one mapping",
+        "Fig04": "Main C3 results",
+        "Fig05": "All vs retained metrics",
+        "Fig06": "Fair dimensionality reduction",
+        "Fig07": "Parameter sensitivity",
+        "Fig08": "External DINOv2 baseline",
+        "Fig09": "Weak/high-rejection classes",
+        "Fig10a": "PV-Fruit retained confusion matrix",
+        "Fig10b": "PV-Vegetable retained confusion matrix",
+        "Fig10c": "MCLD-11 retained confusion matrix",
+        "Fig10d": "DFLD-BR-4 retained confusion matrix",
+        "Fig11": "Discrete risk-coverage points",
+    }
+    for fig_id in main_ids:
         paths = outputs[fig_id]
-        title = {
-            "Fig01": "Detailed framework",
-            "Fig02": "Representative dataset images",
-            "Fig03": "Post-hoc many-to-one mapping",
-            "Fig04": "Main C3 results",
-            "Fig05": "All vs retained metrics",
-            "Fig06": "Fair dimensionality reduction",
-            "Fig07": "Parameter sensitivity",
-            "Fig08": "External DINOv2 baseline",
-            "Fig09": "Weak/high-rejection classes",
-            "Fig10": "Four-dataset kept confusion matrices",
-            "Fig11": "Discrete risk-coverage points",
-        }[fig_id]
         cards.append(
             f"""
             <section class="card">
-              <h3>{fig_id}. {html.escape(title)}</h3>
+              <h3>{fig_id}. {html.escape(title_map[fig_id])}</h3>
               <a href="{paths['png']}" target="_blank"><img src="{paths['png']}" alt="{fig_id}"></a>
               <p><a href="{paths['png']}">PNG</a> <a href="{paths['pdf']}">PDF</a> <a href="{paths['tif']}">TIFF</a></p>
             </section>
             """
         )
     supp_cards = []
-    for p in sorted(SUPP_FIG.glob("*.png")):
-        rel = p.relative_to(ROOT).as_posix()
-        supp_cards.append(f'<section class="card"><h3>{html.escape(p.stem)}</h3><a href="{rel}" target="_blank"><img src="{rel}" alt="{html.escape(p.stem)}"></a></section>')
+    supp_titles = {
+        "FigS01a": "PV-Fruit all samples with Rejected",
+        "FigS01b": "PV-Vegetable all samples with Rejected",
+        "FigS01c": "MCLD-11 all samples with Rejected",
+        "FigS01d": "DFLD-BR-4 all samples with Rejected",
+    }
+    for fig_id in ["FigS01a", "FigS01b", "FigS01c", "FigS01d"]:
+        paths = outputs[fig_id]
+        supp_cards.append(
+            f"""
+            <section class="card">
+              <h3>{fig_id}. {html.escape(supp_titles[fig_id])}</h3>
+              <a href="{paths['png']}" target="_blank"><img src="{paths['png']}" alt="{fig_id}"></a>
+              <p><a href="{paths['png']}">PNG</a> <a href="{paths['pdf']}">PDF</a> <a href="{paths['tif']}">TIFF</a></p>
+            </section>
+            """
+        )
     html_doc = f"""<!doctype html>
 <html lang="zh-CN">
 <head>
@@ -1074,9 +1122,9 @@ def main() -> None:
     outputs["Fig07"] = fig07_parameter_sensitivity()
     outputs["Fig08"] = fig08_dinov2_baseline()
     outputs["Fig09"] = fig09_weak_classes()
-    outputs["Fig10"] = fig10_kept_confusions()
+    outputs.update(fig10_kept_confusions())
     outputs["Fig11"] = fig11_risk_coverage()
-    supplementary_confusions()
+    outputs.update(supplementary_confusions())
     write_inventory(outputs)
     write_html(outputs)
     print(json.dumps({"out": str(OUT), "html": str(ROOT / "index.html")}, ensure_ascii=False, indent=2))
