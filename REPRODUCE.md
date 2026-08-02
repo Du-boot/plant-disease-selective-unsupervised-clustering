@@ -13,8 +13,7 @@ Protocol: transductive selective unsupervised clustering
 ```
 
 `M_new` is the complete 11-class MCLD dataset after SHA256 exact-duplicate
-removal. `M_new_drop5_drop7` is a historical 9-class subset and is not the final
-V13 main dataset.
+removal.
 
 ## 0. Prepare Assets
 

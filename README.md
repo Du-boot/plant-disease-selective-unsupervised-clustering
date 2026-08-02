@@ -59,6 +59,22 @@ models/dinov2_vit_base_patch14_lvd142m.safetensors
 
 ## Final Results
 
+The manuscript V005 / repository V13 final results use the `all3` (C3)
+consensus rule. Values below are the mean +/- sample standard deviation over
+the five archived seeds, calculated from `results/final_k60/main_results.csv`.
+
+| Dataset | Manuscript name | Retained-sample post-hoc aligned clustering accuracy | Coverage |
+|---|---|---:|---:|
+| `F_new` | PV-Fruit | 99.95% +/- 0.02% | 61.37% +/- 2.06% |
+| `V_new` | PV-Vegetable | 99.07% +/- 0.24% | 82.62% +/- 5.67% |
+| `M_new` | MCLD-11 | 90.28% +/- 0.64% | 73.36% +/- 1.51% |
+| `G_new` | DFLD-BR-4 | 99.87% +/- 0.02% | 64.41% +/- 1.50% |
+
+`acc_kept` is evaluated only on samples retained by the consensus rule.
+Coverage is the retained-sample fraction. The conservative overall accuracy is
+`acc_kept * coverage`; it does not assert that all rejected samples are
+incorrect.
+
 The final archived tables are in `results/final_k60/`:
 
 ```text
@@ -78,3 +94,5 @@ figures/v13_figure_report/reproduced_figures/
 ```
 
 For exact rerun commands and manuscript mapping, see `REPRODUCE.md`.
+For the table-to-manuscript and figure-to-source mapping, see
+`docs/V005_FINAL_RESULTS_MAPPING.md`.
